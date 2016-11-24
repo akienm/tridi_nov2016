@@ -1,0 +1,39 @@
+][The first character on this line closes any accidentally open comments]
+[Akien Sstr201406121822 3 rows]
+[Reset Cube] S  
+[Verbose Off] V0
+[Lights On] I1
+[status to green]LO LG10
+
+[Calibrate] H E10 E0 R15 R0 H
+
+[Return to home position] E0 R0
+
+[Set Elevation to 60] E60 R90 R0 
+
+[Take 35 photos 10 degrees apart] 
+{0,350,-10
+R* T
+}
+
+[Set Elevation to 45] R0 E45 R90 R0  
+
+[Take 26 photos 13 degrees apart] 
+{0,350,-13
+R* T
+}
+
+[Set Elevation to 30] R0 E30 R90 R0  
+
+[Take 17 photos 21 degrees apart] 
+{0,350,-21
+R* T
+}
+
+[Return to home position] E0 R0 
+
+[Take 1 photo home position] T
+
+[Final reset] S H
+[status to blue]LO LB10
+[done]

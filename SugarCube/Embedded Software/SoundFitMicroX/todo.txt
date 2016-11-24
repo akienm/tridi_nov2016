@@ -1,0 +1,58 @@
+I'm using [coded] to mean that a fix is coded and possibly tested by
+the coder, but someone else (ideally the person requesting) should
+switch it to [fixed] once it's been verified as fixed.
+
+-----
+- random USB drops?  Crashes after overnight
+
+- [This could take (mostly non-billable, but clock time) days and
+  depends on the previous item]  Try to reproduce random USB
+  drops/serial port hangs in Windows after overnight.
+
+- [Also depends on setting up hardware Windows box].  Hex uploader for
+  Windows.  (It works great on Mac/Linux right now, but I don't think
+  that helps anyone but me.  :)  This is the alternative to users
+  downloading Arduino IDE plus motor libraries and building source
+  code themselves.  It will eventually need to be integrated into the
+  Host software (by Chad).
+
+
+Some things that fall below the line (Probably not worth doing until
+there is a clear need, because there may never be.  I should get a
+contract in place for the stuff I've done that's outside our original
+scope, but certainly for this additional work.  Is the new company set
+up yet?):
+
+- Automated command-line tests of all commands for continuous
+  build/integration.  These would take a while (maybe a full billable
+  day) to write, and longer to get fully correct.
+
+- Table-driven commands.  This would have the advantage of making all
+  commands and their possible return statuses always consistent with
+  the documentation and in-monitor help, but would certainly introduce
+  new bugs which would probably impede progress of others.  (This
+  effect could be mitigated, but not eliminated, if I wrote the
+  automated tests mentioned above.)
+
+- Make D know about all semi-consts: Parsing/setting of Arduino
+  variables (motor parameters, debug, verbose, echo, etc.) if we're
+  not going to do more engineering fiddling with the motors, tops
+  speeds, and accelerations.  We can already set/unset debug, verbose,
+  echo, and I think I'm the only one using those.  If we DO get new
+  motors, this would be a much higher priority.
+
+- Write standalone uploaoder
+  - Find/choose a serial port
+    - This could be super automatic, scanning serial ports, etc.
+    - Or it could be manual.  Here's the list, pick one.
+  - invoke avrdude
+
+
+- print table of error codes and messages
+
+- Move error codes into defines and a table
+
+- auto test (via make)
+  - Write tests for Z and z
+  - Make tests pass
+

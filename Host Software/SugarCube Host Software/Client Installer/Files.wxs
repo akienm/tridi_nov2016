@@ -1,0 +1,199 @@
+﻿<?xml version="1.0"?>
+<!--
+ * SugarCube Audiologist Installer
+ * Copyright (c) 2014-2015 Chad Ullman
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="INSTALLDIR" Name="SugarCube Manager">
+					<Component Id="Application" Guid="D568CAE1-0107-4447-915C-AF35CCB98900" DiskId="1">
+					<File Id='Camera_NET.dll' 
+					      Name='Camera_NET.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\Camera_NET.dll' />
+					<File Id='DirectShowLib_2010.dll' 
+					      Name='DirectShowLib-2010.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\DirectShowLib-2010.dll' />
+					<File Id='Exiftool.exe' 
+					      Name='Exiftool.exe' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\Exiftool.exe' />
+					<File Id='log4net.dll' 
+					      Name='log4net.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\log4net.dll' />
+					<File Id='Magick.NET_x86.dll' 
+					      Name='Magick.NET-x86.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\Magick.NET-x86.dll' />
+					<File Id='Renci.SshNet.dll' 
+					      Name='Renci.SshNet.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\Renci.SshNet.dll' />
+					<File Id='System.Data.SQLite.dll' 
+					      Name='System.Data.SQLite.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\System.Data.SQLite.dll' />
+					<File Id='XnaFan.ImageComparison.dll' 
+					      Name='XnaFan.ImageComparison.dll' 
+					      DiskId='1' 
+					      Source='..\Shared Libs\XnaFan.ImageComparison.dll' />
+					<File Id='SugarCubeAPI.dll' 
+					      Name='SugarCubeAPI.dll' 
+					      DiskId='1' 
+					      Source='..\SugarCube API\bin\Release\SugarCubeAPI.dll' />
+					<File Id='hcrypt.exe'
+					      Name='hcrypt.exe' 
+					      DiskId='1' 
+					      Source='..\InstallationAssets\hcrypt.exe' />
+					<File Id='OrderForm.pdf' 
+					      Name='OrderForm.pdf' 
+					      DiskId='2'
+							Compressed="no"					      
+					      Source='..\InstallationAssets\OrderForm.pdf' />
+					<File Id='OrderSec.cfg' 
+					      Name='OrderSec.cfg' 
+					      DiskId='2'
+							Compressed="no"					      
+					      Source='..\InstallationAssets\OrderSec.cfg' />
+					<File Id='BrandLogo.bmp' 
+					      Name='BrandLogo.bmp' 
+					      DiskId='2'
+							Compressed="no"					      
+					      Source='..\InstallationAssets\BrandLogo.bmp' />
+					<File Id='SugarCubeManager.exe' 
+					      Name='SugarCubeManager.exe' 
+					      DiskId='1' 
+					      Source='..\SugarCube Manager - MVP\bin\Release\SugarCubeManager.exe' />
+					<File Id='SecurityTokenWizard.exe' 
+					      Name='Security Token Wizard.exe' 
+					      DiskId='1' 
+					      Source='..\SecurityTokenWizard\bin\Release\Security Token Wizard.exe' />
+					<File Id='SugarCubeTestBed.exe' 
+					      Name='SugarCubeTestBed.exe' 
+					      DiskId='1' 
+					      Source='..\SugarCube TestBed\bin\Release\SugarCubeTestBed.exe' />
+					<File Id='SugarCube_Uploader.exe' 
+					      Name='SugarCube Uploader.exe' 
+					      DiskId='1' 
+					      Source='..\SugarCube Uploader\bin\Release\SugarCube Uploader.exe' />
+					<File Id='default.cfg'
+							Name='default.cfg'
+							DiskId='1'
+							Source='..\InstallationAssets\default.cfg' />
+					<File Id="InstallArduinoDrivers.bat"
+							Name="InstallArduinoDrivers.bat"
+							DiskId="1"
+							Source="..\InstallationAssets\InstallArduinoDrivers.bat" />		
+					</Component>
+					<Component Id="SecurityToken" 
+					           Guid="AFDDB116-A3B5-4172-A08F-B52E2A2DEADD">
+						<RegistryKey Root="HKLM"
+							Key="SOFTWARE\3DWares\SugarCube">
+							<RegistryValue Type="string" Name="SecurityToken" Value="CC93DEB80838416524EFE7331F1A5E54D59946BD"/> <!-- SaltSphere -->
+						</RegistryKey>						
+					</Component>
+					<Component Id="UploadManagerStartup"
+								  Guid="3D38B435-C2DA-469B-B5A3-A9F03B97F697">
+						<!-- Make sure the uploader always starts when the machine starts -->
+						<RegistryKey Root="HKLM"
+							Key="Software\Microsoft\Windows\CurrentVersion\Run">
+							<RegistryValue Type="string" Name="SugarCubeUploadManager" Value="[INSTALLDIR]SugarCube Uploader.exe"/>
+						</RegistryKey>					
+					</Component>
+					<Component Id='Driver'
+						Guid='7E161320-B502-40C6-84F1-B17219DE69EF'>
+						<File Id='arduino.inf'
+							Name='arduino.inf'
+							DiskId='1'
+							Source='..\InstallationAssets\arduino.inf' />
+						<File Id='arduino.cat'
+							Name='arduino.cat'
+							DiskId='1'
+							Source='..\InstallationAssets\arduino.cat' />
+					</Component>
+					<Component Id="dpinst32"
+						Guid="3FEC6AEC-7347-4DCC-BF74-0E8469602873">
+						<File Id="dpinst32.exe"
+							Name="dpinst.exe"
+							DiskId="1"
+							Source="..\InstallationAssets\dpinst-x86.exe" />
+						<Condition>NOT VersionNT64</Condition>
+					</Component>
+					<Component Id="dpinst64"
+						Guid="A49E540F-390A-44A5-82A0-BBB4177D0D3E">
+						<File Id="dpinst64.exe"
+							Name="dpinst.exe"
+							DiskId="1"
+							Source="..\InstallationAssets\dpinst-amd64.exe" />
+						<Condition>VersionNT64</Condition>
+					</Component> 
+					<Directory Id="x86Libs" Name="x86">
+						<Component Id="x86Libraries" Guid="0667AA1E-68FE-4553-BBBE-5687434DF533" DiskId="1">
+							<File Id='SQLite.Interop.dllx86' 
+							      Name='SQLite.Interop.dll' 
+							      DiskId='1' 
+							      Source='..\Shared Libs\x86\SQLite.Interop.dll' />
+						</Component>
+					</Directory>
+					<Directory Id="x64Libs" Name="x64">
+						<Component Id="x64Libraries" Guid="239CCD65-5A2A-4CEB-9B14-A16F8BB99364" DiskId="1">
+							<File Id='SQLite.Interop.dllx64' 
+							      Name='SQLite.Interop.dll' 
+							      DiskId='1' 
+							      Source='..\Shared Libs\x64\SQLite.Interop.dll' />
+						</Component>
+					</Directory>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder">
+      		<Directory Id="ApplicationProgramsFolder" Name="SugarCube Manager">
+      			<Component Id="ApplicationShortcut" Guid="3E53667A-1AE3-4AF2-90E8-91DD6D107687">
+      				<Shortcut Id="ApplicationStartMenuShortcut"
+      				          Name="SugarCube Manager"
+      				          Description="SugarCube Manager"
+      				          Target="[INSTALLDIR]SugarCubeManager.exe"
+      				          WorkingDirectory="INSTALLDIR" />
+      				<Shortcut Id="DriverInstallerStartMenuShortcut"
+      				          Name="Install Cube Drivers"
+      				          Description="Install the Drivers for the Cube"
+      				          Target="[INSTALLDIR]InstallArduinoDrivers.bat"
+      				          WorkingDirectory="INSTALLDIR" />      				
+      				<Shortcut Id="UninstallProduct"
+      				          Name="Uninstall"
+      				          Description="Uninstalls SugarCube Manager"
+      				          Target="[SystemFolder]msiexec.exe"
+      				          Arguments="/x [ProductCode]" />
+      				<RemoveFolder Id="ApplicationProgramsFolder"
+      				              On="uninstall" />
+      				<RegistryValue Root="HKCU"
+      				               Key="Software\Microsoft\SugarCubeManager"
+      				               Name="installed"
+      				               Type="integer"
+      				               Value="1"
+      				               KeyPath="yes" />
+      			</Component>
+      		</Directory>
+      		<Directory Id="DesktopFolder" Name="Desktop">
+					<Component Id="ApplicationShortcutDesktop" Guid="C8F64151-3EAF-4957-81FE-392C822FEDFD">
+						<Shortcut Id="ApplicationDesktopShortcut"
+									 Name="SugarCube Manager"
+									 Description="SugarCube Manager"
+									 Target="[INSTALLDIR]SugarCubeManager.exe"
+									 WorkingDirectory="INSTALLDIR"/>
+						<RemoveFolder Id="DesktopFolder" On="uninstall"/>
+      				<RegistryValue Root="HKCU"
+      				               Key="Software\Microsoft\SugarCubeManager"
+      				               Name="installed"
+      				               Type="integer"
+      				               Value="1"
+      				               KeyPath="yes" />
+					</Component>      		
+      		</Directory>
+      	</Directory>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

@@ -1,0 +1,29 @@
+][The first character on this line closes any accidentally open comments]
+[Reset Cube] S  
+[Verbose Off] V0
+[Lights On] I1
+[status to green]LO LG10
+[Calibrate] R0 R45 R0 E0 E45 E0
+
+[Akien Sstr201407022035]
+[EXPERIMENTAL - 80@10=36 50@90=4 20@90=4 63 total]
+
+[Set Elevation to lower level] R0 E70 R90 R0  
+{0,351,10
+R* LB0 LG70 LR200 T LB0 LR0 LG10 
+}
+
+[Set Elevation to mid level] R0 E40 R90 R0 
+{45,351,90
+R* LB0 LG70 LR200 T LB0 LR0 LG10 
+}
+
+[Set Elevation to hi level] E20 R90 R0 
+{0,351,90
+R* LB0 LG70 LR200 T LB0 LR0 LG10 
+}
+
+[Return to home position] E0 R0 
+[Final reset] S
+[status to blue]LO LB10
+[done]

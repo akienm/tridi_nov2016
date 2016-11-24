@@ -1,0 +1,5 @@
+Don't directly edit the python code in this directory.  It (along with
+the latest .hex file) is copied in here from the build directory so
+your changes will be overwritten.
+
+This is, however, the master location of avrdude.exe and avrdude.conf.

@@ -1,0 +1,58 @@
+v2.04a:
+
+x The version string, in both the banner and the version command, is
+  now our old-style string concatenated to a "."  and the one from the
+  generated svnversion.h.  Example: "v2.04a.r659M" This should help a)
+  humans diagnose version mismatches more easily, and b) give any
+  version checking host software something consistent to look for.
+
+x Fix crazy full-blast-on green light.  Akien found the problem, where
+  the Adafruit motor shield leaves pin 6 high after initialization (it
+  thinks it's enabling the H bridge for the second motor).  Workaround
+  is to just reset it after initialization.  Dennis still slightly
+  concerned about what pin 6 might also be doing.
+
+x Factor status light setting code to only set lights in one function
+  instead of setting pin directly anywhere else.  It won't save any
+  code length/space to do this, and not reduce complexity much, but
+  it's still probably the right thing to do, especially in light (ha!)
+  of the above problem.
+
+x Remove status light code that turns off other colors before turning
+  on the requested color.  Akien implemented this.  Shooting strings
+  now need to explicitly turn off the other colors (if desired).  For
+  example, a shooting string of "LG6" would need to instead be "LR0
+  LB0 LG6".
+
+x Recognize "]" at all times, not just if a comment was already
+  active, to get rid of "Unrecognized command" at the start of
+  shooting strings.  This probably already worked, and the error
+  message was coming from the Host software.
+
+
+v2.03x:
+x minor cleanups, got rid of all reminders from last code review.
+  x change version to a string
+  x comment value of 500 in check12V()
+  x limval replaced by positionSensorThreshold
+  x Make LED values constants, and warn about maximums
+  x limit (green) to 200 so as to not burn out the LED pin.
+  x limit (blue) to 200 so as to not burn out the LED pin.
+  x factor readline() to use waitForAchar() internally.
+  x convert serialInput from int to char
+  x clarify several comments
+
+x Compute motor degrees-to-steps factors from motor parameters in
+  preparation for allowing them to be changeable in shooting strings
+  or maybe Z strings.  Found inconsistency in elevation motor specs,
+  resulting in actual 512 steps per rotation instead of expected 768.
+
+x cycle motors to limits (and check position sensor zeros) on powerup
+
+x new command 'b' prints the startup banner
+
+x generate and check in .hex file in preparation for avrdude upload
+
+x Made cubeElevate() use correct Elim instead of old Rlim
+
+x Added this NEWS file

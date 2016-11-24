@@ -1,0 +1,151 @@
+﻿<?xml version="1.0"?>
+<!--
+ * SugarCube Audiologist Installer
+ * Copyright (c) 2014-2015 Chad Ullman
+-->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<!-- From the Wix documentation, to create an upgrade installer:
+	Increment the Version value in your Product element to be higher than any previous versions
+   that you have shipped. Windows Installer only uses the first 3 parts of the version in upgrade
+   scenarios, so make sure to increment your version such that one of the first 3 parts is higher
+   than any previously shipped version. For example, if your version 1 uses Version value 1.0.1.0,
+   then version 2 should have a Version value of 1.0.2.0 or higher (1.0.1.1 will not work here).
+
+	NOTE: You need to generate a new GUID for the upgrade code every time you do an upgrade.
+	-->
+	<Product Id="*" 
+	         Name="SugarCube Manager" 
+	         Language="1033" 
+	         Version="1.9.2.0" 
+	         UpgradeCode="483746D1-FCC2-4D39-AD89-1665AE260EE2" 
+	         Manufacturer="3DWares">
+		
+		<Package Description="#Description" Comments="Comments" InstallerVersion="410" Compressed="yes" />
+		<MajorUpgrade Schedule="afterInstallInitialize" DowngradeErrorMessage="A newer version of [ProductName] is already installed. Setup will now exit." />
+
+		<!-- Source media for the installation. -->
+
+		<!-- Specifies a single cab file to be embedded in the installer's .msi for most of the files -->
+		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high" />
+		<!-- Specify a single external media element, any files assigned to this element will live uncompressed outside of the .msi,
+			allowing us to create a customizable installation experience
+		-->
+		<Media Id="2" />
+		
+		<!-- Installation directory and files are defined in Files.wxs -->
+		<Directory Id="TARGETDIR" Name="SourceDir" />
+		
+		<Feature Id="Complete" 
+		         Title="SugarCube Manager" 
+		         Description="The SugarCube Manager enables you to create and upload 3D scans to the 3DWares cloud" 
+		         Level="1">
+			<Feature Id="dpinst32" Level="0">
+				<ComponentRef Id="dpinst32" />
+				<Condition Level="1">NOT VersionNT64</Condition>
+			</Feature>
+			<Feature Id="dpinst64" Level="0">
+				<ComponentRef Id="dpinst64" />
+				<Condition Level="1">VersionNT64</Condition>
+			</Feature>
+			<ComponentRef Id="Application" />
+			<ComponentRef Id="Driver" />
+			<ComponentRef Id="ApplicationShortcut" />
+			<ComponentRef Id="ApplicationShortcutDesktop" />
+			<ComponentRef Id="SecurityToken" />
+			<ComponentRef Id="UploadManagerStartup" />
+			<ComponentRef Id="x86Libraries" />
+			<ComponentRef Id="x64Libraries" />
+		</Feature>
+		
+		<!-- Detect if the user has the right version of the .NET framework installed -->
+		<PropertyRef Id="NETFRAMEWORK40FULL" />
+		<PropertyRef Id="NETFRAMEWORK40CLIENT" />
+		<Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
+			<![CDATA[Installed OR (NETFRAMEWORK40FULL or NETFRAMEWORK40CLIENT)]]>
+		</Condition>
+		
+		<Icon Id="icon.ico" SourceFile="..\Shared Images\SugarCube.ico" />
+		<Property Id="ARPPRODUCTICON" Value="icon.ico" />
+		
+		<!-- These properties and the custom action we define are used to ensure that any running applications
+		that we are trying to install/uninstall are closed first.  Taken from
+		http://www.codeproject.com/Articles/584105/Prompt-user-to-close-applications-on-install-unins 
+		-->
+		<Property Id="PromptToCloseProcesses"
+		          Value="SugarCubeManager,SugarCube Uploader" />
+		<Property Id="PromptToCloseDisplayNames"
+		          Value="SugarCube Manager,SugarCube Uploader" />
+		<Binary Id="ClosePromptBinary"
+		        SourceFile="..\InstallationAssets\ClosePromptCA.CA.dll" />
+		<CustomAction Id="CloseAppsPrompt"
+		              BinaryKey="ClosePromptBinary" 
+		              DllEntry="ClosePrompt" 
+		              Return="check" />
+
+		<!-- These are our custom actions to install and uninstall the arduino drivers -->
+		<CustomAction Id="InstallDriver" 
+		              Execute="deferred" 
+		              Directory="INSTALLDIR" 
+		              ExeCommand="dpinst.exe /lm /sw /sa" 
+		              Impersonate="no" 
+		              Return="ignore" />
+		<CustomAction Id="UninstallDriver" 
+		              Execute="deferred" 
+		              Directory="INSTALLDIR" 
+		              ExeCommand="dpinst.exe /u arduino.inf /sw" 
+		              Impersonate="no" 
+		              Return="ignore" />
+		
+		<!-- We use this custom action to install the VC++ 2012 x86 redistributable, which we assume is bundled with this
+		installer.  There are three parts to this, I'm documenting them here because they are *not* documented correctly in
+		the Wix manual nor are they all put together in one place. -->
+		<!-- This property is used by the CAQuietExec custom action to define the path to the executable it's going to be
+		running in silent mode.  We can *not* set the value of this directly because 'reasons'. -->
+		<Property Id="QtExecCmdLine" Value="none" />
+		<!-- In order to set the value of QtExecCmdLine, we instead create a custom action to update the value, which we can
+		then call during the actual installation.  [SourceDir] is an msi global that points to the directory the .msi is executing
+		from -->
+		<CustomAction Id="SetVCPath" Property="QtExecCmdLine" Value="&quot;[SourceDir]vc_redist-2012.x86.exe&quot; /install /passive" />
+		<!-- And finally, we can define our custom action to actually run the VC++ Redistributable installer -->
+		<CustomAction Id="InstallVCRedistributable"
+		    BinaryKey="WixCA"
+		    DllEntry="CAQuietExec"
+          Execute="immediate"
+          Return="ignore"/>		
+		
+		<!--
+			Using the Wix UI library
+ 
+			WixUI_InstallDir does not allow the user to choose features but adds a dialog to let the
+			user choose a directory where the product will be installed
+		-->
+		<Property Id="WIXUI_INSTALLDIR">INSTALLDIR</Property>
+		<UI>
+			<UIRef Id="WixUI_InstallDir" />
+			<!-- Add a little text to explain what's happening when we start the VC++ installation --> 
+			<ProgressText Action="InstallVCRedistributable">Installing VisualC++ 2012 Redistributable</ProgressText>
+			<!-- Set up to launch the application if the user selects that option after install -->
+			<Publish Dialog="ExitDialog" Control="Finish" Event="DoAction" Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+		</UI>
+		<Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch the SugarCube Manager" />
+		<Property Id="WixShellExecTarget" Value="[#SugarCubeManager.exe]" />
+		<CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+		<WixVariable Id="WixUIBannerBmp" Value="..\InstallationAssets\banner.bmp" />
+		<WixVariable Id="WixUIDialogBmp" Value="..\InstallationAssets\dialog.bmp" />
+		<WixVariable Id="WixUILicenseRtf" Value="..\InstallationAssets\audiologist_license.rtf" />
+		<UIRef Id="WixUI_InstallDir" />
+		<Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="If you have problems connecting with your Sugar Cube, you may need to install the drivers manually.  To do this, simply use the Install Cube Drivers shortcut from the SugarCube Manager portion of the Start menu." />
+		
+		<InstallExecuteSequence>
+			<!-- Prompt to close any open apps we are trying to install -->
+			<Custom Action="CloseAppsPrompt" After="CostFinalize"></Custom>
+			<!-- Set the property that we use to locate the VC++ installer -->
+			<Custom Action="SetVCPath" Before="InstallFinalize"></Custom>
+			<!-- Run the VC++ Redistributable installer when all else is done (on install only, not uninstall) -->
+			<Custom Action="InstallVCRedistributable" After="InstallFinalize">NOT Installed</Custom>
+			<!-- Handle installing/uninstalling the Arduino drivers -->
+			<Custom Action="InstallDriver" After="InstallFiles">NOT Installed</Custom>
+			<Custom Action="UninstallDriver" After="RemoveRegistryValues">Installed</Custom>
+		</InstallExecuteSequence>
+	</Product>
+</Wix>

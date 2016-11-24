@@ -1,0 +1,31 @@
+][The first character on this line closes any accidentally open comments]
+[Reset Cube] S  
+[Verbose Off] V0
+[Lights On] I1
+[status to green]LO LG10
+[Calibrate] R720 R0 H E10 E0 R15 R0 H 
+
+[Akien Sstr201407011552]
+[EXPERIMENTAL - 64 as 80@10=36 50@15=24 20@90=4]
+[Evenly mapping the hemisphere around the model results in straight sided objects with big ripples]
+[So my hope is to do more mapping down low, and then just a spattering above (4) with none at TDC]
+
+[Set Elevation to lower level] R0 E80 R90 R0  
+{0,359,10
+R* LR240 T LR0
+}
+
+[Set Elevation to mid level] R0 E50 R90 R0 
+{0,359,15
+R* LR240 T LR0
+}
+
+[Set Elevation to hi level] E20 R90 R0 
+{0,359,90
+R* LR240 T LR0
+}
+
+[Return to home position] E0 R0 
+[Final reset] S
+[status to blue]LO LB10
+[done]

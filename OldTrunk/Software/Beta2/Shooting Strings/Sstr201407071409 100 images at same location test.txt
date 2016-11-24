@@ -1,0 +1,13 @@
+][The first character on this line closes any accidentally open comments]
+
+[EXPERIMENTAL - Take 100 pics to look for positioning variation]
+
+[Usual stuff] S V0 I1 LO LG10
+[Calibrate] R720 R0 H E10 E0 R15 R0 H 
+
+(100
+E70 R30 R0 R180 LR240 T LR0 E0 R0
+)
+
+[usual end] E0 R0 S LO LB10
+[done]

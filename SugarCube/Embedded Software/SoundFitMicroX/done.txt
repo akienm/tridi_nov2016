@@ -1,0 +1,45 @@
+- F (imaging lamps off) not working, F option missing from switch statement in loop()  [fixed - CU]
+
+
+- N (imaging lamps on) not working, N option missing from switch statement in loop() [fixed - CU]
+
+
+- c (check ready status) not working, c option missing from switch statement in loop() [fixed - CU]
+
+
+- CU: Line 140 of reportStatusToSerial adds an extra newline, which
+breaks my code.  For ease of use, when verbose is off, the only
+newline should be at the end of the entire string  [fixed - CU]
+
+
+
+- Verbose command to take an argument, 0 for off and 1 for on. [fixed - CU]
+
+
+CU: The default value for verbose should be 0, not 1, to make
+ communication with the host software easier [fixed - CU]
+
+
+
+- When Verbose is off, make return string have no newlines, rather just
+the return code and then the data.  So, right now v returns something
+like this: version 2.00
+
+0: statusVersion OK
+
+It would help me if what it returned looked like this
+0:statusVersion OK:version 2.00
+
+so return code:message:data. In case of an error data can be empty  I
+can then very easily create a standard CubeResponse object inside my
+code.  [fixed - CU]
+
+
+
+
+- hook up StatusElevation() and StatusRotation() [coded]
+
+
+
+- Using L for the elevate command but it should be E [CU: fixed]
+- The Elevate command always returns ERROR_DEFAULT [CU: fixed]

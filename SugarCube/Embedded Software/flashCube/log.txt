@@ -1,0 +1,20 @@
+Serial ports:
+  1. COM4...... SugarCube detected.
+Device on port COM4 reports v2.04b.r679M
+avrdude at C:\Program Files\Arduino\hardware\tools\avr\bin\avrdude.exe
+Flashing latest .hex file, SoundFitMicroX_679M.hex. . . . . . 
+After flash, device reports v2.04b.r679M
+ERROR: could not open port 'COM1': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM2': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM5': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM6': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM7': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM8': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM9': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM10': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM11': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM12': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM13': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM14': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM15': WindowsError(2, 'The system cannot find the file specified.')
+ERROR: could not open port 'COM16': WindowsError(2, 'The system cannot find the file specified.')

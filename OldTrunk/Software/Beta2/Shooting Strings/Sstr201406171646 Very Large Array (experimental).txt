@@ -1,0 +1,54 @@
+][The first character on this line closes any accidentally open comments]
+[Akien-Ray Sstr201406171646]
+[Akien's variant of Ray Test shooting string 140608-06:22]
+[Reset Cube] S  
+[Verbose Off] V0
+[Lights On] I1
+[status to green]LO LG10
+
+[Calibrate] R0 R45 R0 E0 E45 E0
+
+[Set Elevation 60 degrees] R90 R0 E60 P01
+[Take 35 images]
+{0,359,10
+R* LB0 LG70 LR200 T LB0 LR0 LG10
+}
+
+[Set Elevation 50 degrees] R90 R0 E50 P01
+[Take 17 images]
+{0,359,20
+R* LB0 LG70 LR200 T LB0 LR0 LG10
+}
+
+[Set Elevation 40 degrees] R90 R0 E40 P01
+[Take 11 images]
+{0,359,30
+R* LB0 LG70 LR200 T LB0 LR0 LG10
+}
+
+[Set Elevation 30 degrees] R90 R0 E30 P01
+[Take 8 images]
+{0,359,40
+R* LB0 LG70 LR200 T LB0 LR0 LG10
+}
+
+[Set Elevation 20 degrees] R90 R0 E20 P01
+[Take 7 images]
+{0,359,50
+R* T
+}
+
+[Set Elevation 10 degrees] R90 R0 E10 P01
+[Take 5 images]
+{0,359,60
+R* T
+}
+
+[Return to home position] E0 R0
+
+[Take 1 photo home position] T
+
+[Return to home position] E0 R0 
+[Final reset] S
+[status to blue]LO LB10
+[done] 

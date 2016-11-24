@@ -1,0 +1,23 @@
+I'm using [coded] to mean that a fix is coded and possibly tested by
+the coder, but someone else (ideally the person requesting) should
+switch it to [fixed] once it's been verified as fixed.
+
+----
+
+-----
+x Test the LED code
+  x Uncomment the LED code
+
+x Get it testing via make
+  x Write tests for Z and z
+  x Make tests pass
+
+- print table of error codes and messages
+
+- Move error codes into defines and a table
+
+- auto test
+  x compile via make:
+    x forward function declarations:
+      x hand-generate or
+      . auto-generate

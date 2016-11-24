@@ -1,0 +1,18 @@
+[Chad Test Shooting String, mimimal photo coverage version]
+[Verbose Off] V0
+[Lights On] N
+[Calibrate] E0 R0 E30 R45 P01 E0 R0 E30 R90 P01 R0
+[Return to home position] E0 R0 P02
+[Take 1 photo home position] T
+[Set Elevation to higher level] R90 R0 E30
+[Take 12 photos 30 degrees apart]
+{0,330,30
+   R* T
+}
+[Set Elevation to lower level] R90 R0 E60
+[Take 12 photos 30 degrees apart, starting at 15 degrees]
+{15,345,30
+   R* T
+}   
+[Return to home position] E0 R0
+[done] x

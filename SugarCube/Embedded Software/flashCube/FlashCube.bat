@@ -1,0 +1,2 @@
+@python flashCube.py
+pause

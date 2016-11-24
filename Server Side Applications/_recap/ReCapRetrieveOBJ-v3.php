@@ -1,0 +1,279 @@
+<?php
+session_start();
+if(isset($_SESSION['user']))
+    {
+        $user = $_SESSION['user'];
+        echo "$user";
+    }
+else
+    {
+    }
+
+echo "\n------- ReCapRetrieve -----------------------------------\n\n";
+    
+/*
+ReCapRetrieveOBJ
+ 
+ Copyright 2013 (c) SoundFit, LLC. All rights reserved 
+ 
+ Developed by Scott McGregor -- SoundFit
+ August 2013 - September 2013
+ 
+ Portions of this work are derived from examples provided by 
+ by Cyrille Fauvel - Autodesk Developer Network (ADN)
+ August 2013
+ 
+ Revision 1.0
+ 
+ PROGRAM DESCRIPTION:
+ 
+ This program is launched by ReCap when ReCap is done processing a Scan into a 
+ 3D Model.    When it is launched, it is passed the ScanID of the original scan
+ folder.   It uses this ScanID for to determine what was the photosceneID of the model.
+ This is done by looking at the contents of a file with that ScanID filename in 
+ 	http://test.soundfit.me/Scans/b1/maps
+ Next, this program will create a folder with the name of the ScanID in the
+  	http://test.soundfit.me/Scans/b1/modeled
+ directory, and it then downloads the OBJ files created by ReCap into that folder.
+ Next, it runs the OBJ to STL conversion program at:
+ /home/earchivevps/test.soundfit.me/apps/meshconv
+ and creates the corresponding STL file, which it also stores in that directory.
+ 
+ Finally, it sends an email notification that the OBJ and STL files are ready for 
+ additional CAD processing or 3D printing to the intended modeler manufacturer. 	
+ */
+ 
+ 
+// ----------------  DEFINITIONS AND GLOBAL VARIABLES ----------------------------
+ 
+require 'vendor/autoload.php' ;
+use Guzzle\Http\Client ;
+use Guzzle\Plugin\Oauth\OauthPlugin ;
+
+define ('ConsumerKey', '076e503f-19d8-48f7-8a5b-8a2964fcf46f') ;
+define ('ConsumerSecret', '509738df-9e15-453b-abc4-27de10059692') ;
+define ('BaseUrl' ,'https://accounts.autodesk.com/') ;
+
+define ('ReCapClientID', 'KkQgk1o4Vjwsg1aBShj12mix90g') ;
+define ('ReCapKey', 'Y wWKk95WhQVvKdww4whI+vib3FmA') ;
+define ('ReCapApiUrl', 'http://rc-api-adn.autodesk.com/3.0/API/') ;
+
+include_once "vendor/oauth/OAuthStore.php" ;
+include_once "vendor/oauth/OAuthRequester.php" ;
+
+include_once "clientcalls.inc.php";
+
+$received_dir_root =  '/home/earchivevps/test.soundfit.me/Scans/b1/received/';
+$ReceivedURL = "http://test.soundfit.me/Scans/b1/received/";
+
+$modeled_dir_root =  '/home/earchivevps/test.soundfit.me/Scans/b1/modeled/';
+$ModeledURL =  'http://test.soundfit.me/Scans/b1/modeled/';
+
+$mapdir = '/home/earchivevps/test.soundfit.me/Scans/b1/maps/';
+
+// use these addresses for where to send email notifications to and from
+
+$emailmapdir = '/home/earchivevps/test.soundfit.me/Scans/b1/emailmaps/';
+$emailmapfile = $emailmapdir . $scanID . ".xml";
+
+if (file_exists($emailmapfile)) {
+    $xml = simplexml_load_file($emailmapfile);
+ 	$to = 	$xml->sender;
+ 	$from = $xml->recipient;
+	echo "to:   $to\n";
+	echo "from: $from\n";
+	
+} else {
+    echo "Failed to open $emailmapfile. Will use default emails addresses";
+}
+
+// $from = "sugarcube-daemon@soundfit.me";
+// choose who to send and email notification to:
+// $to = "scott@soundfit.me";
+// $to = "rnd@soundfit.me";
+
+
+// $to = htmlspecialchars($_GET["recipientEmail"]);
+if ($to == "") $to = "pcl-orders@soundfit.me";
+
+// $from = htmlspecialchars($_GET["senderEmail"]);
+if ($from == "") $from = "sugarcube-daemon@soundfit.me";
+
+
+// ----------------  END OF DEFINITIONS AND GLOBAL VARIABLES ----------------------
+
+ 
+// ----------------  GET SCANID AND PHOTOSCENE ID ----------------------------
+// This program is called with a URL that defines the scanID.
+// if this program is run from the command line, the scanID is passed as a CLI argument.
+if (php_sapi_name() === 'cli') {parse_str(implode('&', array_slice($argv, 1)), $_GET);}
+$scanID = htmlspecialchars($_GET["scanID"]);
+// echo "Retrieving scanID = $scanID\n";
+
+// Once we know the scanID, we can check the maps directory that has mappings between 
+// scanIDs and photoSceneIDs.   We need the photoSceneID to retrieve the proper OBJ file.
+
+$mapfile = $mapdir . $scanID;
+// echo "mapfile = $mapfile\n";
+$photoSceneID = trim(file_get_contents ($mapfile ));
+// echo "photoSceneID = $photoSceneID\n";
+$orderfile = glob($received_dir_root.$scanID.'/ORDER*.pdf');
+$neworderfile =  basename($orderfile[0]);
+// ----------------  END OF GET SCANID AND PHOTOSCENE ID ---------------------
+
+
+// ----------------  START-UP NOTIFICATION (DISABLED) ---------------------------
+// If you want to send an email when this program starts (before it begins
+// processing anything else, uncomment this code:
+/*
+             $to = "scott@soundfit.me";
+	         $headers = "From: sugarcube-daemon@soundfit.me";
+             $subject = "LAUNCHED: ScanID($scanID) / model($photoSceneID)";
+             "ReCapRetrieveOBJ.php Callback function launched -- scanID = $scanID";
+             $message = print_r($_GET, true);
+	         mail($to,$subject,$message,$headers);
+*/	         
+// ----------------  END OF START-UP NOTIFICATION (DISABLED) ---------------------	         
+
+
+// ------------------------ RECAP OAUTH NEGOTIATION -------------------------------
+//- Prepare the PHP OAuth for consuming our Oxygen service
+$options =array (
+	'consumer_key' => ConsumerKey,
+	'consumer_secret' => ConsumerSecret,
+	'server_uri' => BaseUrl,
+	'request_token_uri' => BaseUrl . 'OAuth/RequestToken',
+	'authorize_uri' => BaseUrl . 'OAuth/Authorize',
+	'access_token_uri' => BaseUrl . 'OAuth/AccessToken',
+) ;
+OAuthStore::instance ('Session', $options) ;
+
+// we retrieve the OAuth token from a file where it is updated regularly:
+$fname =realpath (dirname (__FILE__)) . '/access_token.txt' ;
+$access =unserialize (file_get_contents ($fname)) ;
+
+// Create a client and provide a base URL
+$client =new Client (ReCapApiUrl) ;
+//- http://guzzlephp.org/guide/plugins.html
+//- The Guzzle Oauth plugin will put the Oauth signature in the HTML header automatically
+$oauthClient =new OauthPlugin (array (
+	'consumer_key' => ConsumerKey,
+	'consumer_secret' => ConsumerSecret,
+	'token' => $access ['oauth_token'], //- access_token
+	'token_secret' => $access ['oauth_token_secret'], //- access_token_secret
+)) ;
+$client->addSubscriber ($oauthClient) ;
+// -------------------- END OF RECAP OAUTH NEGOTIATION ----------------------------
+
+
+// -------------------- GET THE PHOTOSCENE OBJ URL --------------------------------
+// Now we retrieve the 3D model from ReCap
+echo "\nRetrieving PhotoSceneID $photoSceneID for ScanID $scanID\n\n";
+$request =$client->get ("photoscene/$photoSceneID") ;
+$request->getQuery ()->clear () ; // Not needed as this is a new request object, but.as I am going to use merge(), it is safer
+$request->getQuery ()->merge (array ( 
+'clientID' => ReCapClientID, 'timestamp' => time (), 
+'format' => 'obj')) ;
+$response =$request->send () ;
+// echo "Response Body\n-------\n", $response->getBody (), "======\n\n" ;
+$xml =$response->xml () ;
+$objURL = $xml->Photoscene->scenelink ;
+echo "OBJ model for ScanID: $scanID \nis at: $objURL\n\n";
+// -------------------- END OF GET THE PHOTOSCENE OBJ URL -------------------------
+
+
+// -------------------- CREATE THE SCANID FOLDER IN MODELED DIRECTORY --------------
+$scan_directory = $modeled_dir_root.$scanID;
+if (!file_exists($scan_directory)) {$retval = mkdir($scan_directory,0775);}
+// -------------------- END OF CREATE THE SCANID FOLDER IN MODELED DIRECTORY --------
+
+
+// -------------------- DOWNLOAD OBJ ZIP FILE ---------------------------------------
+// Now we will copy the OBJ file from ReCap into the "modeled" Scan directory
+$scan_zipfile = $scan_directory . '/' . $scanID . ".obj.zip";
+set_time_limit(0); 
+$file = file_get_contents($objURL);
+file_put_contents($scan_zipfile, $file);
+
+//unzip the OBJ file:
+// get the absolute path to $file
+$path = pathinfo(realpath($scan_zipfile), PATHINFO_DIRNAME);
+// echo "path = $path\n";
+$zip = new ZipArchive;
+$res = $zip->open($scan_zipfile);
+// -------------------- END OF DOWNLOAD OBJ ZIP FILE --------------------------------
+
+
+// -------------------- UNZIP OBJ AND CONVERT TO STL  -------------------------------
+if ($res === TRUE) {  // If download was successful, Unzip and convert 
+  // -------------------- UNZIP -----------------------------
+  // extract it to the path we determined above
+  $zip->extractTo($path);
+  $zip->close();
+  // -------------------- END OF UNZIP -----------------------
+  
+  // -------------------- CONVERT OBJ TO STL FORMAT -----------------------------
+  // use meshconv to create the STL file from the OBJ file
+  $infilename =  $scan_directory . '/' .  "mesh.obj";
+  // $tempfilename = "./tmp/SCS" . date("U");
+  $tempfilename = $scan_directory . '/' .  "mesh";
+  $shellcmd =  "/home/earchivevps/test.soundfit.me/apps/meshconv "
+	            . $infilename . " -c STL -o " . $tempfilename;
+  $answer = `$shellcmd`;
+  // echo "convert to OBJ stdout: $answer\n";
+  // -------------------- CONVERT OBJ TO STL FORMAT -----------------------------
+  
+  // -------------------- PREPARE SUCCESS NOTIFICATION TEXT ----------------------
+  echo "SUCCESS: $scanID OBJ and STL models now in $ModeledURL$scanID/\n\n";
+  $subject = "SUCCESS: ScanID($scanID) / model($photoSceneID)is ready for manufacturing";
+  $message =  "$subject\n"
+  			. "New order: $ReceivedURL$scanID/$neworderfile received.\n"
+  			. "OBJ Directory: $ModeledURL$scanID/\n"
+  			. "STL: $ModeledURL$scanID/mesh.stl\n"
+  			. "Scan images in $ReceivedURL$scanID. \n";
+  // -------------------- END OF PREPARE SUCCESS NOTIFICATION TEXT --------------- 
+} 
+else {
+  // -------------------- PREPARE FAILURE NOTIFICATION TEXT ----------------------
+  echo "ERROR! Couldn't retrieve $photoSceneID, couldn't open $scan_zipfile\n";
+  $subject = "ERROR! Couldn't retrieve $photoSceneID, couldn't open $scan_zipfile";
+  $message =  "$subject\n"
+  			. "New order: $ReceivedURL$scanID/$neworderfile - modeling failed.\n"
+  			. "Scan images in $ReceivedURL$scanID. \n";
+  $message = $subject . " \nOBJ file not retrieved.";
+  // -------------------- END OF PREPARE FAILURE NOTIFICATION TEXT ---------------
+}
+// -------------------- END OF UNZIP OBJ AND CONVERT TO STL  ----------------------
+
+
+// -------------------- SEND THE EMAIL NOTIFICATIONS  -----------------------------
+// Notify the user of the result of the scan
+ // echo "Sending Mail to:$to <br />";
+ // echo "From: $from <br />";
+ $headers = "From: " . $from;
+ // echo "Headers = $headers <br />";
+ // echo "Subject:  $subject <br />";
+ // echo "Message = $message <br />";
+ mail($to,$subject,$message,$headers);
+ // echo "#  Mail Sent.";
+// -------------------- END OF SEND THE EMAIL NOTIFICATIONS  ----------------------
+
+// -------------------- DELETE THE PHOTOSCENE (DISABLED)  -------------------------
+// This is commented out for now as we might not want to delete the photoscene yet, 
+// since we may want to access it in a separate program.  Ultimately we should
+// enable this when we are in production to keep our Autodesk directory small.
+/* 
+$request =$client->delete ("photoscene/{$photoSceneID}") ;
+$request->addPostFields (array ( 'clientID' => ReCapClientID, 'timestamp' => time (), )) ;
+$response =$request->send () ;
+echo "Response Body\n-------\n", $response->getBody (), "======\n\n" ;
+$xml =$response->xml () ;
+if ( isset ($xml->Photoscene->deleted) && $xml->Photoscene->deleted == 0 )
+	echo "My ReCap PhotoScene is now deleted\n" ;
+else
+	echo "Failed deleting the PhotoScene and resources!\n" ;
+ */
+// -------------------- END OF DELETE THE PHOTOSCENE (DISABLED)  ------------------
+ 
+exit ;
+?>

@@ -1,0 +1,15 @@
+﻿WCF Tutorial - Basic Interprocess Communication
+	http://tech.pro/tutorial/855/wcf-tutorial-basic-interprocess-communication
+
+What is the best way to check for Internet connectivity using .NET?
+	http://stackoverflow.com/questions/2031824/what-is-the-best-way-to-check-for-internet-connectivity-using-net#
+
+Deciphering the .NET clr20r3 exception parameters P1..P10
+	http://stackoverflow.com/questions/4052770/deciphering-the-net-clr20r3-exception-parameters-p1-p10
+	
+Add this after the mutex check, we don't want to be trying to log to the same file as the already open program
+// Check if we're going to be using logging
+string loggingConfigFile = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "3DWares"), "YOUR_NAME_HERE.lc.xml");
+if (File.Exists(loggingConfigFile)) {
+	XmlConfigurator.Configure(new FileInfo(loggingConfigFile));
+}

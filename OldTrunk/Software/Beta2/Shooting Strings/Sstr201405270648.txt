@@ -1,0 +1,30 @@
+][The first character on this line closes any accidentally open comments]
+[Akien-Ray Sstr201405270648]
+[Akien's version of Ray Test shooting string 140508-10:00] 
+[Reset Cube] S  
+[Verbose Off] V0
+[Lights On] I1
+[status to blue]LO LB10
+[Calibrate] E120 E0 E30 R15 R0 E0 R0 R400 R0 R358 R0 
+
+[Return to home position] E0 R0
+[Take 1 photo home position] T
+
+[Set Elevation to lower level] E30 R90 R0 
+
+[Take 13 photos 27 degrees apart] 
+{0,351,27
+R* T
+}
+
+[Set Elevation even lower] R0 E60 R90 R0  
+
+[Take 25 photos 14 degrees apart] 
+{0,350,14
+R* T
+}
+
+[Return to home position] E0 R0 
+[Final reset] S  
+[status to green]LO LG10
+[done] x

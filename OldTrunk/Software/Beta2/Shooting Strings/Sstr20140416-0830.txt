@@ -1,0 +1,17 @@
+[Chad For Loop Test]
+[Reset Cube] S
+[No really, reset the cube] E0 R0
+[Verbose Off] V0
+[Lights On] N
+[Move to 60 degrees down elevation] E60 
+[Take 12 photos 30 degrees apart, starting at 0]
+{0,330,30
+R* T
+}
+[Move to 20 degrees down elevation] E20
+[Take 12 photos 30 degrees apart, starting at 15]
+{15,345,30
+R* T
+}
+[Go Home] E0 R0
+[Done] x

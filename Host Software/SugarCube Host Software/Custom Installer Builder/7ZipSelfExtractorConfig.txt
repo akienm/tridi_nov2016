@@ -1,0 +1,4 @@
+;!@Install@!UTF-8!
+Title="SugarCube Manager Installer"
+ExecuteFile="SugarCubeManager.msi"
+;!@InstallEnd@!

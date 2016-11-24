@@ -1,0 +1,94 @@
+﻿<?xml version="1.0"?>
+<!--
+ * SugarCube Custom Installer Builder Installer
+ * Copyright (c) 2014-2015 Chad Ullman
+-->
+
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<!-- From the Wix documentation, to create an upgrade installer:
+	Increment the Version value in your Product element to be higher than any previous versions
+   that you have shipped. Windows Installer only uses the first 3 parts of the version in upgrade
+   scenarios, so make sure to increment your version such that one of the first 3 parts is higher
+   than any previously shipped version. For example, if your version 1 uses Version value 1.0.1.0,
+   then version 2 should have a Version value of 1.0.2.0 or higher (1.0.1.1 will not work here).
+
+	NOTE: You need to generate a new GUID for the upgrade code every time you do an upgrade.
+	-->
+	<Product Id="*"
+		Name="SugarCube Custom Installer Builder"
+		Language="1033"
+		Version="1.9.2.0"
+		UpgradeCode="B93200DA-AE7A-413C-BB48-A577A932311A"
+		Manufacturer="3DWares">
+		
+		<Package Description="#Description"
+			Comments="Comments"
+			InstallerVersion="200"
+			Compressed="yes"/>
+		
+   	<MajorUpgrade
+   		Schedule="afterInstallInitialize" 
+   		DowngradeErrorMessage="A newer version of [ProductName] is already installed. Setup will now exit." />
+		
+		<!--
+			Source media for the installation. 
+ 			Specifies a single cab file to be embedded in the installer's .msi. 
+		-->
+		<Media Id="1" Cabinet="contents.cab" EmbedCab="yes" CompressionLevel="high"/>
+		
+		<!-- Installation directory and files are defined in Files.wxs -->
+		<Directory Id="TARGETDIR" Name="SourceDir"/>
+		
+		<Feature Id="Complete"
+		         Title="SugarCube Custom Installer Builder"
+		         Description="This will install the SugarCube Custom Installer Builder utility to your PC."
+		         Level="1">
+		         <ComponentRef Id="Application"/>
+					<ComponentRef Id="ApplicationShortcut" />
+					<ComponentRef Id="ApplicationShortcutDesktop" />
+		</Feature>
+
+      <!-- Detect if the user has the right version of the .NET framework installed -->
+      <PropertyRef Id="NETFRAMEWORK40FULL"/>
+      <PropertyRef Id="NETFRAMEWORK40CLIENT"/>
+      <Condition Message="This application requires .NET Framework 4.0. Please install the .NET Framework then run this installer again.">
+         <![CDATA[Installed OR (NETFRAMEWORK40FULL or NETFRAMEWORK40CLIENT)]]>
+      </Condition>
+		
+      <Icon Id="icon.ico" SourceFile="..\Shared Images\SugarCube.ico"/>
+      <Property Id="ARPPRODUCTICON" Value="icon.ico" />	
+		
+		<!-- 
+			Using the Wix UI library
+ 
+			WixUI_InstallDir does not allow the user to choose 
+			features but adds a dialog to let the user choose a 
+			directory where the product will be installed
+		-->
+		<Property Id="WIXUI_INSTALLDIR">INSTALLDIR</Property>
+		
+		<!-- Set up to launch the application if the user selects that option after install -->
+      <UI>
+         <UIRef Id="WixUI_InstallDir"/>
+         <Publish Dialog="ExitDialog" 
+            Control="Finish" 
+            Event="DoAction" 
+            Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
+      </UI>
+      <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Launch the SugarCube Custom Installer Builder" />
+      <Property Id="WixShellExecTarget" Value="[#SugarCube Manager Custom Installer Builder.exe]" />
+      <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
+	
+		<WixVariable Id="WixUIBannerBmp"
+			Value="..\InstallationAssets\banner.bmp" />
+		<WixVariable Id="WixUIDialogBmp"
+			Value="..\InstallationAssets\dialog.bmp" />
+		<WixVariable Id="WixUILicenseRtf"
+			Value="..\InstallationAssets\installer_builder_license.rtf" />
+
+		<UIRef Id="WixUI_InstallDir"/>
+		
+		<Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Thank you for supporting 3DWares." />
+	
+	</Product>
+</Wix>

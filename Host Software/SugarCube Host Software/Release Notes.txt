@@ -1,0 +1,74 @@
+Release 1.5
+===========
+
+Defects addressed in this release:
+68
+86
+89
+92
+97
+98
+99
+101
+108
+
+
+Global Changes
+--------------
+* Removed all references to SoundFit, including in namespaces, replaced everything with 3DWares [99]
+* Updated everything to use the new SugarCube icon
+
+
+Client Installer
+----------------
+* Added a desktop shortcut icon for the Manager [92]
+* Added the SugarCube uploader to the Run key to autostart on logon [98]
+* Created temporary graphics for installer use
+
+Internal Installer
+------------------
+* Added the SugarCube uploader to the Run key to autostart on logon [98]
+
+Security Token Wizard
+---------------------
+* Added a button to allow the authenticated user to completely remove the security token [97]
+
+SugarCube API
+-------------
+* The default folder for app config and scans is now %APPDATA%\3DWares, not %APPDATA%\SoundFit [99]
+* Consolidated the two (functionaly) identical error dialogs into a single error dialog 
+* Added an interface for defining the IPC pipe between the Manager or Test Bed and the Upload Manager [89, 98] 
+* Added code to the SecurityManager class to clear the authentication token from the registry
+* Many changes to the UploadManager class: [89, 98]
+  > Added a struct that represents a single scan in the upload queue
+  > Added a new messaging flag for the uploader so certain messages can be filtered out in the Upload Manager (these are detailed debug messages that we would only want to see in the test bed)
+  > Added code for working with the IPC pipe to allow communication with the Upload Manager
+  > Changed the way we work with the SQLite DB.  Instead of maintaining a single open connection, we create and close connections as necessary.  This greatly improves the performanace and stability of the uploading process.
+  > Added a simple (and simplistic) method to check if we currently have a working internet connection by trying to download http://test.soundfit.me/isup.html [108]
+
+SugarCube Manager
+-----------------
+* Changed the title of the main window from 'SugarCube Manager - MVP Beta 1 [build {0}]' to 'SugarCube Manager [build {0}]'
+* Changed the text of the 'Complete Step 1' button to 'Continue' [101]
+* Changed the text of the 'Upload Order Now' button to 'Upload Order' [108]
+* Changed the text of the 'Queue Upload for Later' button to 'Show Upload Manager' [108]
+* Added a splash screen to indicate that the manager is initializing [86]
+* The manager now only uses queued uploades [108]
+* If there is no internet connection at the time of adding the scan to the queue, the user will be informed [108]
+* Updated the UI to use the new SugarCube logo graphic from Kyle
+
+SugarCube Test Bed
+------------------
+* The test bed attempts to make sure the upload manager is running on startup [68]
+* Added a button to send the scan to the upload queue instead of trying to run the upload in real time [68, 89]
+
+Sugar Cube Upload Manager
+-------------------------
+* Added a double click handler so double clicking on the uplod manager icon in the notification area will open the main upload manager window
+* Added tool text so when you hover over the icon in the notification area you see the most recent global status update
+* Added code to manage the server side fo the IPC pipe so that we can request to see the main window from either the test bed or manager [108]
+* Fixed a math bug so the manager checks for new scans every minute, not every second
+* Changed the wording of the dialog that warns users when they choose to close the uploader
+* Changed the text of the "OK" button to "Hide Upload Manager"
+* Changed the text of the "Pause Uploads and Exit" button to "Exit Upload Manager"
+* Changed the title of the main window to read SugarCube Upload Manager rather then SugarCube Scan Uploader

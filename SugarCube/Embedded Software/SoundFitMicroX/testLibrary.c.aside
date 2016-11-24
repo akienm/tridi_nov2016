@@ -1,0 +1,274 @@
+
+// Testing directives:
+//
+// Later, these will become a testing directive, such as 'T', and then
+// addition information to trigger the specific suite. We will add
+// this functionality LATER.
+const int  A  = int('A'); // Activate test loop
+const int  t0 = int('0'); // run all built in tests - testcase0()
+const int  t1 = int('1'); // testing scenario #1 rotate all the way one way,
+                          //   then all the way back
+const int  t2 = int('2'); // testing scenario #2 elevation down and up
+const int  t3 = int('3'); // testing scenario #3 Rotation at lower angle
+const int  t4 = int('4'); // testing scenario #4 Lights
+const int  t5 = int('5'); // testing scenario #5 Detection
+
+
+//===========================================================================
+// TEST LIBRARY
+//
+// define test looping vars
+//
+boolean testModeEnabled = 0;
+boolean testModeBreak   = 0;
+int     testModeCounter = 0;
+
+int TestLoop()
+{
+    testModeEnabled = 1;
+    Serial.println("0: TestLoop test mode enabled OK");
+    return 0;
+}
+
+// This bunch of forward declarations lets us compile using the
+// command line instead of the IDE, which lets us automate testing.
+// At some point, it might be nice to automate forward reference
+// generation like the Arduino IDE does, or it might be nice not to,
+// since the compiler can do better type checking without.
+void testcase0();
+void testcase1();
+void testcase2();
+void testcase3();
+void testcase4();
+void testcase5();
+
+int ImagingOn();
+int ImagingOff();
+int cubeHome(bool report);
+int cubeRotate(int destDegreePos);
+int cubeElevate(int destDegreePos);
+
+void StatusLEDBlue(int newValue);
+void StatusLEDRed(int newValue);
+void StatusLEDGreen(int newValue);
+void StatusLEDOff();
+int cubeHomeRotation();
+int cubeHomeElevation();
+int StatusReady();
+int StatusElevation();
+int StatusRotation();
+void statusVersion();
+int reset();
+
+void TestProcessNext()
+{
+  if(testModeBreak == 1) {
+    testModeEnabled = 0;
+    testModeBreak = 0;
+    testModeCounter = 0;
+  }
+  else if (testModeEnabled == 1) {
+    Serial.print("0: TestProcessNext - testModeCounter = ");
+    Serial.println(testModeCounter,DEC);
+
+    if(testModeCounter == 5) {
+      testModeCounter = 1;
+      testcase5();
+    }
+    if(testModeCounter == 4) {
+      testModeCounter = 5;
+      testcase4();
+    }
+    if(testModeCounter == 3) {
+      testModeCounter = 4;
+      testcase3();
+    }
+    if(testModeCounter == 2) {
+      testModeCounter = 3;
+      testcase2();
+    }
+    if(testModeCounter == 1) {
+      testModeCounter = 2;
+      testcase1();
+    }
+    if(testModeCounter == 0) {
+      testModeCounter = 5;
+    }
+  }
+}
+
+void testcase0()
+{
+  testcase1(); // rotation test
+  testcase2(); // elevation test
+  testcase3(); // simulated scan (low elev) test
+  testcase4(); // lights
+  testcase5(); // detection
+
+  Serial.println("0: TC0: Done");
+}
+
+// rotation test
+void testcase1()
+{
+  int returnValue;
+  returnValue = ImagingOn();
+
+  returnValue = cubeHome(ENABLE_REPORT);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC1 cubeHome()");
+  delay(1000);
+
+  returnValue = cubeRotate(75);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC1 cubeRotate(75)");
+  delay(1000);
+
+  reset();
+  Serial.println("0: TC1 Done");
+}
+
+// elev test
+void testcase2()
+{
+  int returnValue;
+  returnValue = ImagingOn();
+
+  returnValue = cubeHome(ENABLE_REPORT);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC1 cubeHome()");
+  delay(1000);
+
+  returnValue = cubeElevate(60);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC2 cubeElevate(60)");
+  delay(1000);
+
+  reset();
+  Serial.println("0: TC2 Done");
+}
+
+// simulated scan test (lower angle)
+void testcase3()
+{
+  int returnValue;
+  returnValue = ImagingOn();
+
+  returnValue = cubeHome(ENABLE_REPORT);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC3 cubeHome()");
+  delay(1000);
+
+  returnValue = cubeElevate(60);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC3 cubeElevate(60)");
+  delay(1000);
+
+  returnValue = cubeRotate(75);
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC3 cubeRotate(75)");
+  delay(1000);
+
+  reset();
+  Serial.println("0: TC3 Done");
+}
+
+// lights
+void testcase4()
+{
+  int returnValue;
+
+  returnValue = ImagingOn();
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC4 ImagingOn()");
+  delay(1000);
+
+  returnValue = ImagingOff();
+  Serial.print(returnValue,DEC);
+  Serial.println(": TC4 ImagingOff()");
+  delay(1000);
+
+  StatusLEDGreen(255);
+  Serial.println("0: TC4 StatusLEDGreen(255)");
+  delay(1000);
+
+  StatusLEDBlue(255);
+  Serial.println("0: TC4 StatusLEDBlue(255)");
+  delay(1000);
+
+  StatusLEDRed(255);
+  Serial.println("0: TC4 StatusLEDRed(255)");
+  delay(1000);
+
+  StatusLEDOff();
+  Serial.println("0: TC4 StatusLEDOff()");
+  delay(1000);
+
+  reset();
+  Serial.println("0: TC4 Done");
+}
+
+int Status12V(bool report);
+int StatusDoor(bool report);
+
+// detection
+void testcase5()
+{
+  int returnValue;
+  const char *doorMsg =
+    ">>>>>>>>>> Waiting 5 seconds for door to change state...";
+  returnValue = cubeHome(ENABLE_REPORT);
+
+  returnValue = StatusRotation();
+  Serial.print(returnValue == 1,DEC);
+  Serial.print(": TC5 StatusRotation()");
+  delay(1000);
+
+  returnValue = StatusElevation();
+  Serial.print(returnValue == 1,DEC);
+  Serial.println(": TC5 StatusElevation()");
+  delay(1000);
+
+  returnValue = cubeElevate(15);
+  returnValue = cubeRotate(15);
+
+  returnValue = StatusRotation();
+  Serial.print(returnValue == 1,DEC);
+  Serial.print(": TC5 StatusRotation()");
+  delay(1000);
+
+  returnValue = StatusElevation();
+  Serial.print(returnValue == 1,DEC);
+  Serial.println(": TC5 StatusElevation()");
+  delay(1000);
+
+  returnValue = cubeHome(ENABLE_REPORT);
+
+  returnValue = Status12V(ENABLE_REPORT);
+  Serial.print(returnValue,DEC);
+  Serial.print("TC5 Status12V()");
+  returnValue = analogRead(pin12VSense);
+  Serial.print(" power read was = ");
+  Serial.println(returnValue,DEC);
+  delay(1000);
+
+  returnValue = StatusDoor(ENABLE_REPORT);
+  Serial.println(returnValue,DEC);
+  Serial.println(": TC5 StatusDoor() #1");
+  Serial.println(doorMsg);
+  delay(5000);
+  returnValue = StatusDoor(ENABLE_REPORT);
+  Serial.println(returnValue,DEC);
+  Serial.println(": TC5 StatusDoor() #2");
+  Serial.println(doorMsg);
+  delay(5000);
+  Serial.println(returnValue,DEC);
+  Serial.println(": TC5 StatusDoor() #3");
+  delay(5000);
+
+  reset();
+  Serial.println("0: TC5 Done");
+}
+//===========================================================================
+// End of Test Library
+//===========================================================================

@@ -1,0 +1,25 @@
+][Akien test shooting string 201404221408]
+[Reset Cube] S  
+[Verbose Off] V0 
+[Lights On] N 
+[Calibrate] R400 R359 R180 R90 R15 R0 E120 E90 E60 E30 R15 R0 E0
+[status to blue]LO LB128
+
+[Set Elevation to lower level] R0 E60 R15 R0
+
+[Take 24 photos 15 degrees apart]
+{0,345,15
+R* T T T T T T T T T T
+}
+
+[Set Elevation to higher level] R0 E30 R15 R0
+
+[Take 24 photos 30 degrees apart]
+{0,330,15
+R* T T T T T T T T T T
+}
+
+[Return to the home position] R0 E0 
+[Final reset] S  
+[status to green]LO LG128
+[done] x

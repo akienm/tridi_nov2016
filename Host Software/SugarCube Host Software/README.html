@@ -1,0 +1,149 @@
+<html>
+<head>
+<title>README</title>
+<style type='text/css'>
+body {
+font-family:Arial,Helvetica,sans-serif;
+font-size: 10pt;
+}
+
+h1,h2,h3 {
+ color: cornflowerblue;
+ margin-bottom: 0px;
+ padding-bottom: 0px;
+}
+</style>
+</head>
+
+<body>
+<h1>SugarCube Host Software README</h1>
+<h2>Overview</h2>
+<p>This is the source code for the SugarCube host software and related utilities.  You can browse the code using any decent text editor (I recommend <a href='http://notepad-plus-plus.org/'>Notepad++</a> personally) but if you want to edit or debug you will need to get SharpDevelop (4.3 or higher).  More details on that below.</p>
+
+<h2>Mimimum Development Setup</h2>
+<p>You need at least version 4 of the .NET framework to build and run the software.  Additionally, you will need to grab SharpDevelop, the open source .NET IDE. You can find the latest version <a href="http://www.icsharpcode.net/OpenSource/SD/Download/">here</a>, the mimimum version you will need is 4.3.</p>
+<p>Once you have SharpDevelop installed, double click on AStyle.sdaddin to install the AStyle addin.  This allows you to automatically format your code, more below.</p>
+
+<h2>Code Formatting</h2>
+<p>The code is all formatted identically.  Consistent code formatting is important because it reduces noise when doing diffs across code revisions.  To make this easier, it is a requirement that everyone who edits this code makes use of the AStyle addin to format their code, and that everyone's formatting options are set identically.</p>
+<p>There are two places where you will need to set options. The first is in SharpDevelop itself. Select Tools -> Options fromt he main menu, and then in the options dialog select Text Editor -> Behavior.  Set Indentationt o 3 and make sure Convert Tabs to Spaces is unchecked, like so:</p>
+<img src='SharpDevelop_Options_TextBehavior.png'/>
+<p>The next place you have to set options is in the ASpell addin itself.  Select Tools -> Astyle options from the main menu. Set the Coding style to CommandLine and check Indent Namespaces and Use tab char.  Then set the command line to <code>--style=java --indent-namespaces --indent=force-tab=3</code>. The dialog should look like this:</p>
+<img src='SharpDevelop_AStyle_Settings.png'/>
+<p>Now, whenever you have edited code, press Ctrl-Alt-W to run Astyle before saving.</p>
+
+<h2>Coding Standards</h2>
+<p>Generally, I find that the fewer standards the more likely people are to remember to use them.  Here are the few that I try to stick to:</p>
+<ul>
+<li>No Hungarian Notation: Use longer, descriptive variable names instead.  The one exception to this is that I tend to prepend control names with class initials, so for example a check box to select verbose output might be names cbVerbose, whereas a variable to do the same would be named something like verboseOutputOn</li>
+<li>Private class data starts with an underscore (_maxFileSize)</li>
+<li>Method names start with a capital letter, are as descriptive as possible and use CamelCase (CalculateMaxFileSize)</li>
+<li>Constants are written as all caps using underscores (MAX_FILE_SIZE)</li>
+<li>Wherever possible, especially in classes that are going to be used elsewhere in the code, write XML comments for the class memebers</li>
+<li>If there is an assumption in the code, a tricky piece of logic, some systems knowledge that explains why somthing is done in the funky way that it is, please please please put in a comment!</li>
+<li>When in doubt, add a comment.</li>
+<li>We use log4net to add log comments, all log comments should be wrapped in a "if this log level is enabled" test for best performance when logging is disabled.
+</ul>
+
+<h2>Using Code Templates</h2>
+<p>Using code templates for commonly repeated code makes for a much easier development time. For details on how to use code templates, see <a href="http://community.sharpdevelop.net/blogs/mattward/articles/FeatureTourCodeGeneration.aspx">this link</a>. In particular, the following templates are very useful for quickly inserting logging statements</p>
+
+<table border='1' cellspacing='0' cellpadding='3'>
+<tr>
+	<th>Template Name</th>
+	<th>Template Value</th>
+</tr>
+<tr>
+	<td>lnew</td>
+	<td>
+<pre>
+/// &lt;summary&gt;
+/// Initalizes our static logger reference with the type name of the class
+/// &lt;/summary&gt;
+private static readonly ILog log = LogManager.GetLogger(typeof(${ClassName}));
+</pre>
+	</td>
+</tr>
+<tr>
+	<td>ldebug</td>
+	<td>
+<pre>
+if (log.IsDebugEnabled) {
+    log.Debug(${Selection});
+}
+${Caret}
+</pre>
+	</td>
+</tr>
+<tr>
+	<td>linfo</td>
+	<td>
+<pre>
+if (log.IsInfoEnabled) {
+    log.Info(${Selection});
+}
+${Caret}
+</pre>
+	</td>
+</tr>
+<tr>
+	<td>lwarn</td>
+	<td>
+<pre>
+if (log.IsWarnEnabled) {
+    log.Warn(${Selection});
+}
+${Caret}
+</pre>
+	</td>
+</tr>
+<tr>
+	<td>lerror</td>
+	<td>
+<pre>
+if (log.IsErrorEnabled) {
+    log.Error(${Selection});
+}
+${Caret}
+</pre>
+	</td>
+</tr>
+<tr>
+	<td>lfatal</td>
+	<td>
+<pre>
+if (log.IsFatalEnabled) {
+    log.Fatal(${Selection});
+}
+${Caret}
+</pre>
+	</td>
+</tr>
+</table>
+
+<h2>Solution Structure</h2>
+<p>There are five projects in the solution and two folders of supporting files.  These are discussed below:</p>
+<h3>Shared Images</h3>
+<p>Any image or icon used by more than one of the projects should go here.</p>
+
+<h3>Shared Libs</h3>
+<p>All of our shared third-party libraries go here.</p>
+
+<h3>SugarCube API</h3>
+<p>The hears of the software, this is the shared API used across projects that covers interacting with the cube, uploading images, etc.</p>
+
+<h3>SugarCube Arduino Smoke Tester</h3>
+<p>This simple utility checks that we are speaking the same language as the cube</p>
+
+<h3>SugarCube Manager - MVP</h3>
+<p>The first MVP release of the host software for offsite real-customer testing</p>
+
+<h3>SugarCube TestBed</h3>
+<p>This is where new features are developed and tried out.  It exposes the guts of our API for testing and experimentation.</p>
+
+<h3>SugarCube Uploader</h3>
+<p>A background uploader for scans, utilizing SFTP.</p>
+
+<hr noshade='1'/>
+</body>
+</html>

@@ -1,0 +1,26 @@
+Library Camera_NET is under terms of LGPL 3.0 or newer.
+	http://www.codeproject.com/Articles/671407/Camera-Net-Library
+	https://github.com/free5lot/Camera_Net/releases
+
+Library DirectShowLib is under terms of LGPL 2.1 or newer.
+	http://directshownet.sourceforge.net/
+
+Magick.Net is under terms of Apache License 2.0
+	https://magick.codeplex.com/
+
+SSH.NET is under terms of New BSD License (BSD)
+	https://sshnet.codeplex.com/
+
+XnaFan.ImageComparison is under terms of The Code Project Open License (CPOL) 1.02
+	http://www.codeproject.com/Articles/374386/Simple-image-comparison-in-NET
+
+System.Data.SQLite is mostly in in the public domain, with some portions covered by the Microsoft Public License
+
+License Sites
+CPOL	http://www.codeproject.com/info/cpol10.aspx
+Apache License 2.0	http://www.apache.org/licenses/LICENSE-2.0
+LGPL 2.1	http://opensource.org/licenses/LGPL-2.1
+LGPL 3.0	http://opensource.org/licenses/LGPL-3.0
+SSH.NET License 	http://sshnet.codeplex.com/license
+System.Data.SQLite Copyright Notice	http://system.data.sqlite.org/index.html/doc/trunk/www/copyright.wiki
+Microsoft Pulic License	http://opensource.org/licenses/ms-pl

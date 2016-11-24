@@ -1,0 +1,102 @@
+<?php
+/*
+ Copyright (c) Autodesk, Inc. All rights reserved 
+
+ PHP Autodesk Oxygen WEB Sample
+ by Cyrille Fauvel - Autodesk Developer Network (ADN)
+ August 2013
+
+ Permission to use, copy, modify, and distribute this software in
+ object code form for any purpose and without fee is hereby granted, 
+ provided that the above copyright notice appears in all copies and 
+ that both that copyright notice and the limited warranty and
+ restricted rights notice below appear in all supporting 
+ documentation.
+
+ AUTODESK PROVIDES THIS PROGRAM "AS IS" AND WITH ALL FAULTS. 
+ AUTODESK SPECIFICALLY DISCLAIMS ANY IMPLIED WARRANTY OF
+ MERCHANTABILITY OR FITNESS FOR A PARTICULAR USE.  AUTODESK, INC. 
+ DOES NOT WARRANT THAT THE OPERATION OF THE PROGRAM WILL BE
+ UNINTERRUPTED OR ERROR FREE.
+ 
+*/
+
+include_once "vendor/oauth/OAuthStore.php" ;
+include_once "vendor/oauth/OAuthRequester.php" ;
+
+//- Prepare the PHP OAuth for consuming our Oxygen service
+$options =array (
+	'consumer_key' => ConsumerKey,
+	'consumer_secret' => ConsumerSecret,
+	'server_uri' => BaseUrl,
+	'request_token_uri' => BaseUrl . 'OAuth/RequestToken',
+	'authorize_uri' => BaseUrl . 'OAuth/Authorize',
+	'access_token_uri' => BaseUrl . 'OAuth/AccessToken',
+) ;
+
+print_r($options);
+OAuthStore::instance ('Session', $options) ;
+
+echo "\nstep 1\n";
+$fname =realpath (dirname (__FILE__)) . '/access_token.txt' ;
+print_r($fname);
+
+echo "\nstep 2\n";
+echo file_get_contents ($fname) . "\n" ;
+$access =unserialize (file_get_contents ($fname)) ;
+
+echo "\nstep 3\n";
+print_r($access);
+
+//- To disable the SSL check to avoid an exception with invalidate certificate on the server,
+//- use the cURL CURLOPT_SSL_VERIFYPEER option and set it to false.
+
+//- Refresh the token
+try {
+	//$access =OAuthRequester::requestAccessToken (ConsumerKey, $token ['oauth_token'], 0, 'POST', $access, array ( CURLOPT_SSL_VERIFYPEER => 0, )) ;
+	echo "\nstep 4A\n";
+	echo $options ['access_token_uri'] ;
+	echo "\n";
+	$request =new OAuthRequester ($options ['access_token_uri'], 'GET', $access) ;
+	echo "\nstep 4B\n";
+	print_r($request);
+	
+	$ret =$request->doRequest (0, array ( CURLOPT_SSL_VERIFYPEER => 0, )) ;
+	echo "step 5\n";
+	print_r($ret);
+	
+	$ret =explode ('&', $ret ['body']) ;
+	echo "step 6\n";
+	print_r($ret);
+	
+	foreach ( $ret as $key => $value ) {
+		$entry =explode ('=', $value) ;
+		echo "step 7\n";
+		print_r($entry);
+		
+		echo "step 8\n";
+		print_r(rawurldecode ($entry [1]));
+		$access [$entry [0]] =rawurldecode ($entry [1]) ;
+	}
+	
+	echo "step 9\n";
+	print_r($access);
+	
+	//- In this sample, we save the token to a file
+	echo "step 10\n";
+	echo  realpath (dirname (__FILE__)) . '/access_token.txt' ;
+	$fname =realpath (dirname (__FILE__)) . '/access_token.txt' ;
+	echo "step 11\n";
+	print_r($fname);
+	
+	file_put_contents ($fname, serialize ($access)) ;
+	echo "step 12\n";
+
+} catch (Exception $e) {
+	echo "OAuth/AccessToken\n", 'Caught exception: ',  $e->getMessage (), "\n";
+	exit ;
+}
+
+//- Done
+//exit ;
+?>

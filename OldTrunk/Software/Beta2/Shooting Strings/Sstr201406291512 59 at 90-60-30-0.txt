@@ -1,0 +1,36 @@
+][The first character on this line closes any accidentally open comments]
+[Akien Sstr201406291512]
+[Reset Cube] S  
+[Verbose Off] V0
+[Lights On] I1
+[status to green]LO LG10
+
+[Calibrate] R720 R0 H E10 E0 R15 R0 H 
+
+[67 Total shots]
+
+[Set Elevation to lower level] R0 E90 R90 R0  
+[Take 36 photos 10 degrees apart] 
+{0,359,10
+R* LR240 T LR0
+}
+
+[Set Elevation to mid level] E60 R90 R0 
+[Take 18 photos 20 degrees apart] 
+{0,359,20
+R* LR240 T LR0
+}
+
+[Set Elevation to hi level] E30 R90 R0 
+[Take 12 photos 30 degrees apart] 
+{0,359,30
+R* LR240 T LR0
+}
+
+[Return to home position] E0 R0 
+[Take 1 photo at TDC]
+LR240 T LR0
+
+[Final reset] S
+[status to blue]LO LB10
+[done]

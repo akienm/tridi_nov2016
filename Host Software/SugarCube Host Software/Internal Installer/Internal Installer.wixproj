@@ -1,0 +1,59 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <ProjectGuid>{1D980BD1-706E-4E7B-95E6-28B6FA529715}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Package</OutputType>
+    <RootNamespace>Full_Installer</RootNamespace>
+    <OutputName>sugarcube_installer-internal</OutputName>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' AND '$(MSBuildExtensionsPath32)' != '' ">$(MSBuildExtensionsPath32)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <WixTargetsPath Condition=" '$(WixTargetsPath)' == '' ">$(MSBuildExtensionsPath)\Microsoft\WiX\v3.x\Wix.targets</WixTargetsPath>
+    <SupressIces>ICE45</SupressIces>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>bin\Debug\</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+    <Optimize>False</Optimize>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+    <Optimize>True</Optimize>
+  </PropertyGroup>
+  <ItemGroup>
+    <WixExtension Include="..\..\..\..\..\..\Program Files %28x86%29\WiX Toolset v3.8\bin\WixNetFxExtension.dll" />
+    <WixExtension Include="..\..\..\..\..\..\Program Files %28x86%29\WiX Toolset v3.8\bin\WixUtilExtension.dll" />
+    <WixExtension Include="WixUIExtension.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Files.wxs" />
+    <Compile Include="Setup.wxs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SugarCube Manager - MVP\SugarCube Manager - MVP.csproj">
+      <Project>{7C0AC6FF-E28C-441D-A89F-07865C8FF874}</Project>
+      <Name>SugarCube Manager - MVP</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SugarCube TestBed Batch Runner\SugarCube TestBed Batch Runner.csproj">
+      <Project>{C7BD294A-5338-4E3E-8239-C256D91BA800}</Project>
+      <Name>SugarCube TestBed Batch Runner</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SugarCube TestBed\SugarCube TestBed.csproj">
+      <Project>{660BBCEC-0EB3-4671-B14A-9C83150CCD05}</Project>
+      <Name>SugarCube TestBed</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\SugarCube Uploader\SugarCube Uploader.csproj">
+      <Project>{EEE9DCA6-F984-4D4B-AA67-EA0D9C5A68DE}</Project>
+      <Name>SugarCube Uploader</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(WixTargetsPath)" />
+</Project>

@@ -1,0 +1,61 @@
+﻿<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="INSTALLDIR" Name="SugarCube Custom Installer Builder">
+					<Component Id="Application" Guid="D0484FF2-4CB6-47F3-AB1B-B64B3E85735E" DiskId="1">
+					<File Id='SugarCubeManagerCustomInstallerBuilder.exe' 
+					      Name='SugarCube Manager Custom Installer Builder.exe' 
+					      DiskId='1' 
+					      Source='..\Custom Installer Builder\bin\Release\SugarCube Manager Custom Installer Builder.exe' />
+					<File Id='SevenZipA.exe' 
+					      Name='7za.exe' 
+					      DiskId='1' 
+					      Source='..\Custom Installer Builder\bin\Release\7za.exe' />
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="ApplicationProgramsFolder" Name="SugarCube Custom Installer Builder">
+					<Component Id="ApplicationShortcut" Guid="DD5FB84F-F005-48D9-9EFB-176F71C98F39">
+						<Shortcut Id="InstallerBuilderStartMenuShortcut"
+							       Name="SugarCube Custom Installer Builder"
+							       Description="SugarCube Custom Installer Builder"
+                            Target="[INSTALLDIR]SugarCube Manager Custom Installer Builder.exe"
+                            WorkingDirectory="INSTALLDIR" />
+     					<Shortcut Id="UninstallProduct"
+      				          Name="Uninstall"
+      				          Description="Uninstall the SugarCube Custom Installer Builder"
+      				          Target="[SystemFolder]msiexec.exe"
+      				          Arguments="/x [ProductCode]" />
+      				<RemoveFolder Id="ApplicationProgramsFolder"
+      				              On="uninstall" />
+      				<RegistryValue Root="HKCU"
+      				               Key="Software\Microsoft\SCMInstallerBuilder"
+      				               Name="installed"
+      				               Type="integer"
+      				               Value="1"
+      				               KeyPath="yes" />
+					</Component>
+				</Directory>
+      		<Directory Id="DesktopFolder" Name="Desktop">
+					<Component Id="ApplicationShortcutDesktop" Guid="7281F524-8D7A-4B42-865B-A752998E8A79">
+						<Shortcut Id="ApplicationDesktopShortcut"
+							       Name="SugarCube Custom Installer Builder"
+							       Description="SugarCube Custom Installer Builder"
+                            Target="[INSTALLDIR]SugarCube Manager Custom Installer Builder.exe"
+                            WorkingDirectory="INSTALLDIR" />
+						<RemoveFolder Id="DesktopFolder" On="uninstall"/>
+      				<RegistryValue Root="HKCU"
+      				               Key="Software\Microsoft\SCMInstallerBuilder"
+      				               Name="installed"
+      				               Type="integer"
+      				               Value="1"
+      				               KeyPath="yes" />
+					</Component>      		
+      		</Directory>			
+			</Directory>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

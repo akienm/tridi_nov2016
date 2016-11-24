@@ -1,0 +1,19 @@
+][close comments]
+[2 layer 15 degrees]
+
+[Usual] S 
+[More of same] V0 I1 LO LG10
+[Calibrate] R0 R45 R0 E0 E45 E0
+
+[Set Elevation to lower level] R0 E80 R45 R0  
+{0,351,15
+R* LB0 LG70 LR200 T LB0 LR0 LG10
+}
+
+[Set Elevation to mid level] E0 R0 E40 R45 R0 
+{0,351,15
+R* LB0 LG70 LR200 T LB0 LR0 LG10 
+}
+
+[Usual] E0 R0 S LO LB10
+[done]

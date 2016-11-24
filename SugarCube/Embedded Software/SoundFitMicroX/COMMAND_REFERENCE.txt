@@ -1,0 +1,100 @@
+
+Command Reference
+-----------------
+(commands are upper case, status queries are lower case)
+
+b   BANNER displays banner message
+B   <PLANNED> Sets motor control params (to adjust hardware vibration management)
+c   CHECK READY returns ready status
+d   DRAWER returns drawer open/close status
+D   <PLANNED> Sets data (used to adjust internal variables on the fly for debugging)
+e   ELEVATION Status reports whether home position
+En  ELEVATION where n is a number, elevation in degrees
+H   <PLANNED> HOME move both motors to the home position
+In  IMAGING LAMPS n can be 1 (on) or 0 (off)
+r   ROTATION Status reports whether at home position
+Rn  ROTATION where n is a number, rotation in degrees
+LO  LED STATUS OFF
+LBn LED STATUS BLUE where n is a brightness value, 6 is reccomended 200 is max
+LGn LED STATUS GREEN where n is a brightness value, 6 is reccomended 200 is max
+LRn LED STATUS RED where n is a brightness value, of 0 or 1 (not variable)
+P   Pause (processed by host computer)
+S   RESET motors to home position, imaging LEDs off, status to red or green
+t   TWELVE VOLT reports whether the scanner is plugged in to power (gives red LED if not)
+T   Take Picture (processed by host computer)
+v   VERSION reports the current version
+Vn  VERBOSE where n = 0 (off) or 1 (on)
+z   retrieve Z data from EEPROM
+Zs  Store Z data string on EEPROM
+
+
+[   Start comment
+]   End Comment
+
+Shooting strings also support loops. Nested loops are not supported. Loops are enclosed in curly braces, and start with 3 numbers, the starting value, the ending value, and the increment value. In the body of the loop, an asterisk fills in the current loop value. Like so:
+{0,345,15
+R* T
+}
+
+---------------------------------------------------------------------------
+Z, z:  Store and retrieve named values
+
+Variable syntax is similar to common configuration files.  The
+variable names can be made up of anything except whitespace or an
+equals sign.
+
+Store a couple of values:
+  Zfoo=bar<nl>
+  0: NVStore OK
+
+  Z$long var name=long value$
+  0: NVStore OK
+
+Get them all back:
+  z
+  foo=bar
+  long var name=long value
+  0: NVRetrieve OK
+
+Get one back:
+  zfoo
+  bar
+  0: NVRetrieve OK
+
+  z$long var name$
+  long value
+  0: NVRetrieve OK
+
+  z$something unknown$
+  13: NVRetrieve not found
+
+Any non-whitespace character other than "=" is OK as a delimiter.  In
+the example, I used "$," but "/" is another popular choice.
+
+Most variables are stored from one session to the next, but "verbose"
+is set to 0 on every box startup (not the reset command, though) to
+make parsing by the host computer easier.
+
+If there isn't space to store the requested values, the error message
+will say so:
+
+  Z/something enormous=something else enormous/
+  12: NVStore out of space
+
+You can delete less important variables like so:
+
+  Zfoo=
+  0: NVStore OK
+
+  zfoo
+  13: NVRetrive not found
+
+That probably wouldn't make enough room for our enormous variable, but
+if it did, you'd then get:
+
+  Z/something enormous=something else enormous/
+  0: NVStore OK
+----
+These things get stored in one 1024 byte EEPROM buffer.
+
+  foo=bar$long var name=long value$baz/something enormous=something else enormous/|soundfit-the-url=https://soundfit.me/IamTheWalrus

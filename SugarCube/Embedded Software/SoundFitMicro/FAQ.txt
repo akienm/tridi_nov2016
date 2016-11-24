@@ -1,0 +1,51 @@
+SoundFitMicro firmware for the Arduino.
+
+Compiles with Arduino v1.0.5 as of 2014-03-26
+
+Once Asked Questions (not a FAQ, a 1AQ):
+
+Q1.  Do you need more than 1 degree precision in the rotations and/or
+elevations that you request?  If yes, will need decimal or other
+representation.
+
+A1.  No.  Set the stepping targets based on rounding the requested
+number of degrees to the closest single-steppable position.
+
+[ TL; DR: Checked with Ray, we don't need to get better than the step
+size of the motors -- we're at 1.8 for the rotation now, and 0.9 for
+the next one. So that will still need to be supported.
+
+While it would be nice to have 1 degree of accuracy or better, our
+minimum step size is actually more like around 7.5 degrees, at least
+for as long as we're using Autodesk to do the modeling. The use of
+RRLLUUDD was centered around that idea. But using actual target
+degrees lets us slow to a stop, which is the most important thing we
+get from microstepping for now.]
+
+
+Q2.  Is it sufficient to position the motor to the nearest position
+that whole-step resolution allows, or do you want to try for a more
+precise position with a microstep?  For the large motor, of course,
+the 360 possible degrees would map to the only 200 possible steps,
+giving a maximum error of 0.8 degrees.
+
+At the cost of larger, possibly slower, and a bit more complicated
+code, we can position to at least 800, maybe more, for a maximum 0.2
+degree error.  (Heh, we could specify positions in rads instead of
+degrees and with two level microstepping have a precise position for
+each of the 400 rads in a circle.)
+
+A2.  Hold at full steps.
+
+[TL; DR: We can use microstepping to start and stop, but not to hold a
+position. After we have this box in customer's hands, we can explore
+whether adding that will cost us anything on the vibration front.
+
+Hold at full steps for now, in case holding at a microstep is less
+steady.  Not sure it is, motor physics here:
+http://homepage.divms.uiowa.edu/~jones/step/physics.html#halfstep
+Microstepping vs. full stepping might change the holding torque, but I
+think it depends on too many things that we don't know to determine
+analytically.  Maybe you get a 10% or so (ranging from a couple
+percent for big motors to 25% for small ones) higher holding torque at
+a stopped full-step position.]

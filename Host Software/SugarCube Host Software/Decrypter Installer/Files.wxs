@@ -1,0 +1,61 @@
+﻿<?xml version="1.0"?>
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+	<Fragment>
+		<DirectoryRef Id="TARGETDIR">
+			<Directory Id="ProgramFilesFolder" Name="PFiles">
+				<Directory Id="INSTALLDIR" Name="SugarCube Order Form Decrypter">
+					<Component Id="Application" Guid="D2BF952F-AE90-448A-AC5E-D8A73E8ACF3B" DiskId="1">
+					<File Id='OrderFormDecrypter.exe' 
+					      Name='Order Form Decrypter.exe' 
+					      DiskId='1' 
+					      Source='..\Order Form Decrypter\bin\Release\Order Form Decrypter.exe' />
+					<File Id='hcrypt.exe' 
+					      Name='hcrypt.exe' 
+					      DiskId='1' 
+					      Source='..\Order Form Decrypter\bin\Release\hcrypt.exe' />
+					</Component>
+				</Directory>
+			</Directory>
+			<Directory Id="ProgramMenuFolder">
+				<Directory Id="ApplicationProgramsFolder" Name="SugarCube Order Form Decrypter">
+					<Component Id="ApplicationShortcut" Guid="D0456F95-9F9E-4371-8A33-3F20EC7235B5">
+						<Shortcut Id="OrderFormDecrypterStartMenuShortcut"
+							       Name="SugarCube Order Form Decrypter"
+							       Description="SugarCube Order Form Decrypter"
+                            Target="[INSTALLDIR]Order Form Decrypter.exe"
+                            WorkingDirectory="INSTALLDIR" />
+     					<Shortcut Id="UninstallProduct"
+      				          Name="Uninstall"
+      				          Description="Uninstall the SugarCube Order Form Decrypter"
+      				          Target="[SystemFolder]msiexec.exe"
+      				          Arguments="/x [ProductCode]" />
+      				<RemoveFolder Id="ApplicationProgramsFolder"
+      				              On="uninstall" />
+      				<RegistryValue Root="HKCU"
+      				               Key="Software\Microsoft\SCMInstallerBuilder"
+      				               Name="installed"
+      				               Type="integer"
+      				               Value="1"
+      				               KeyPath="yes" />
+					</Component>
+				</Directory>
+      		<Directory Id="DesktopFolder" Name="Desktop">
+					<Component Id="ApplicationShortcutDesktop" Guid="2F995E9A-4739-41C1-8AA7-90CE0A7D954C">
+						<Shortcut Id="ApplicationDesktopShortcut"
+							       Name="SugarCube Order Form Decrypter"
+							       Description="SugarCube Order Form Decrypter"
+                            Target="[INSTALLDIR]Order Form Decrypter.exe"
+                            WorkingDirectory="INSTALLDIR" />
+						<RemoveFolder Id="DesktopFolder" On="uninstall"/>
+      				<RegistryValue Root="HKCU"
+      				               Key="Software\Microsoft\SCMInstallerBuilder"
+      				               Name="installed"
+      				               Type="integer"
+      				               Value="1"
+      				               KeyPath="yes" />
+					</Component>      		
+      		</Directory>			
+			</Directory>
+		</DirectoryRef>
+	</Fragment>
+</Wix>

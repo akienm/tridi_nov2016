@@ -1,0 +1,345 @@
+Adds result record (or object) for each atomic function
+
+adds an "interfacing layer" which calls each atomic function and then gathers it's results and formats them appropriately for reporting
+
+alters command parsing to be "queue up the command characters and parse once we have a whitespace"
+
+
+resultObject
+	number
+	sender
+	message
+	data
+
+in these records(objects?), use pointers to constants in non-ram memory??
+
+statusRotate
+	number = 1/0 is there an error
+	sender = Rotate
+	message = "OK"/"Error Unexpected Home"
+	data = last rotated actual position
+statusRotateWalkToZero
+	number = 1/0 is there an error
+	sender = RotationWalkToZero
+	message = "OK"/"Error Blocked"
+	data = last rotated actual position
+statusGetSensorRotateHome
+	number = 0
+	sender = GetSensorRotateHome
+	message = "OK"
+	data = last actual sensor value 0 = home, 1 = not
+statusElevate
+	number = 1/0 is there an error
+	sender = Elevate
+	message = "OK"/"Blocked"
+	data = last elevated actual position
+statusElevateWalkToZero
+	number = 1/0 is there an error
+	sender = ElevationWalkToZero
+	message = "OK"/"Blocked"
+	data = last elevated actual position
+statusGetSensorElevateHome
+	number = 0
+	sender = GetSensorElevateHome
+	message = "OK"
+	data = last actual sensor value 0 = home, 1 = not
+statusLEDRed
+	number = always 0
+	sender = StatusLEDRed
+	message = "OK"
+	data = last set value
+statusLEDGreen
+	number = always 0
+	sender = StatusLEDGreen
+	message = "OK"
+	data = last set value
+statusLEDBlue
+	number = always 0
+	sender = StatusLEDBlue
+	message = "OK"
+	data = last set value
+statusSetZData
+	number = always 0???
+	sender = SetZData
+	message = "OK"
+	data = do we need *anything* here?
+statusGetZData
+	number = 0/1
+	sender = GetZData
+	message = "OK"/"Invalid"
+	data = last set value
+statusSetXData
+	number = always 0???
+	sender = SetXData
+	message = "OK"
+	data = do we need *anything* here?
+statusGetXData
+	number = 0/1
+	sender = GetXData
+	message = "OK"/"Invalid"
+	data = last set value
+statusImagingLamps			// not sure we actually *need* this (here for completeness)
+	number = 0/1 (if no 12V, will be 1)
+	sender = Imaging
+	message = "OK"
+	data = last set value
+statusGetSensor12V			// not sure we actually *need* this (here for completeness)
+	number = 0/1 (if no 12V, will be 1)
+	sender = GetSensor12V
+	message = "OK"/"Error no 12V"
+	data = last set value
+statusGetSensorDrawer			// not sure we actually *need* this (here for completeness)
+	number = 0/1 (if drawer open, will be 1)
+	sender = GetSensorDrawer
+	message = "OK"/"Error no 12V"
+	data = last set value
+
+XData values
+	rotateStepsPerCircle
+	rotateMode (interleave/single/etc)
+	rotateFastSpeed
+	rotateSlowSpeed
+	elevateStepsPerCircle
+	elevateMode (interleave/single/etc)
+	
+////////////////////////////////////////////////////////////
+// Name: RotateWalkToZero()
+// Desc: Atomic function to single step the rotation arm back to zero
+// 
+// Args: None
+// Notes: Uses the Adafruit library
+////////////////////////////////////////////////////////////
+RotateWalkToZero()
+
+	// try it faster first
+	set adafruit rotate mode to XData.rotateMode
+	set adafruit rotate speed to XData.rotateFastSpeed
+	stepsToGo = xdata.rotateStepsPerCircle
+	while ((stepsToGo > 0) and (GetSensorRotateHome() == false)
+		adafruit step -1
+		stepsToGo --
+
+	// and if that didn't work, try it slower
+	if (GetSensorRotateHome() == false)
+		set adafruit rotate speed to XData.rotateSlowSpeed
+		stepsToGo = rotateStepsPerCircle
+		while ((stepsToGo > 0) and (GetSensorRotateHome() == false)
+			set step speed 12
+			adafruit step -1
+			stepsToGo --
+	
+		// cleanup
+		set adafruit rotation speed to XData.rotateFastSpeed
+
+	// report 
+	If IsRotAtHome() == true
+		update statusRotateWalkToZero OK
+	else
+		update statusRotateWalkToZero 1/blocked
+
+
+////////////////////////////////////////////////////////////
+// Name: Rotate(x)
+// Desc: Atomic function to step to a specified location
+// 
+// Args: x - approximate target position in degrees
+// Notes: reports actual position in status object
+////////////////////////////////////////////////////////////
+Rotate(x)
+
+	if (x == 0) 
+		RotateWalkToZero()
+		update statusRotate from statusRotateWalkToZero
+		if status is ok
+			accelstepper.resettozero()
+	else
+		set adafruit rotation mode to XData.rotationMode
+		set adafruit rotation speed to XData.rotateFastSpeed
+		
+		accelstepper to x
+		if GetSensorRotateHome() == true
+			update statusRotate 1/home wasn't expected
+	
+
+////////////////////////////////////////////////////////////
+// Name: CallRotate(x)
+// Desc: Reporting function to step to a specified location
+// 
+// Args: x - approximate target position in degrees
+// Notes: reports actual position to host (from status object)
+////////////////////////////////////////////////////////////
+CallRotate(x)   <-- this is what's called from the Loop()
+	Rotate(x)
+	Gather and report on issues	
+	
+////////////////////////////////////////////////////////////
+// Name: ElevateWalkToZero()
+// Desc: Atomic function to single step the elevation arm back to zero
+// 
+// Args: None
+// Notes: Uses the Adafruit library
+////////////////////////////////////////////////////////////
+ElevateWalkToZero()
+
+	// try it faster first
+	set adafruit elevateion mode to XData.rotationMode
+	set adafruit rotation speed to XData.rotateFastSpeed
+	stepsToGo = xdata.elevateStepsPerCircle
+	while ((stepsToGo > 0) and (GetSensorElevateHome() == false)
+		adafruit step -1
+		stepsToGo --
+
+	If IsRotAtHome() == false
+		adafruit step 10 (backup a little and try again - worked in testing)
+		
+	stepsToGo = elevateStepsPerCircle
+	while ((stepsToGo > 0) and (GetSensorElevateHome() == false)
+		adafruit step -1
+		stepsToGo --
+	
+	If GetSensorElevateHome() == true
+		update statusElevateWalkToZero OK
+	else
+		update statusElevateWalkToZero 1/blocked
+
+
+Elevate(x)
+
+	if (x == 0) 
+		ElevateWalkToZero()
+		update statusElevate from statusElevateWalkToZero
+		if status is ok
+			accelstepper.resettozero()
+
+	else
+		accelstepper to x
+		if GetSensorElevateHome() == true
+			update statusElevate 1/home wasn't expected
+
+CallElevate(x)   <-- this is what's called from the Loop()
+	Elevate(x)
+	Gather and report on issues	
+	
+Home()
+	Rotate(0)
+	Elevate(0)
+
+CallHome()
+	Home()
+	Gather and report on issues	
+
+
+GetSensor12V()
+	check sensor
+	set result
+
+
+CallGetSensor12V()
+	GetSensor12V()
+	Gather and report on issues	
+
+SetImagingLamps(x)
+
+CallSetImagingLamps(x)
+
+SetStatusLEDsOff()
+
+CallSetStatusLEDsOff()
+
+SetStatusLEDRedPin(x) <-- used only by the main interface and the error led code
+	set the value
+
+SetStatusLEDRed(x) <-- this is the most common *internal* interface
+	SetStatusLEDRedPin(x)
+	update the status object with the new value
+
+CallSetStatusLEDRed(x) <-- this is the external interface
+
+oldStatusLEDStates
+	int red
+	int green
+	int blue
+	bool activeError
+
+SaveStatusLEDValues()
+	copy values from status led objects to oldStatusLEDStates
+
+RestoreStatusLEDValues()
+	restore values from oldLEDStates
+
+UpdateStatusLEDsForErrors()
+	wasThereAnError = oldLEDStates.activeError
+
+	// test for errors
+	if Test12V() = false
+		if oldLEDStates.activeError = false
+			SaveStatusLEDValues()
+			oldLEDStates.activeError = true
+		SetStatusLEDRedPin(200)
+		SetStatusLEDGreenPin(0)
+		SetStatusLEDBluePin(0)
+	else if statusRotationWalkToZero.number = 1 OR statusElevationWalkToZero.number = 1
+		if oldLEDStates.activeError = false
+			SaveStatusLEDValues()
+			oldLEDStates.activeError = true
+		SetStatusLEDRedPin(200)
+		SetStatusLEDGreenPin(0)
+		SetStatusLEDBluePin(0)
+
+	// clear errors if is ok to do so
+	if wasThereAnError = true
+		if Test12V() = true AND statusRotationWalkToZero.number = 0 AND statusElevationWalkToZero.number = 0
+			RestoreStatusLEDValues()
+			oldLEDStates.activeError = false
+
+Setup()
+	RotationWalkToZero()
+	SetStatusLEDsOff()
+	VerifyZDataIntegrity()
+	
+
+string commandBuffer
+int commandBufferCursor
+
+loop
+	if there's a new char
+		if it's a whitespace
+			call the bufferParser()
+		else
+			add it to the command buffer
+	UpdateStatusLEDsForErrors()
+
+bufferParser()
+	walk the command buffer with a btree like search
+	and when you find the appropriate directive/query, 
+	call it's do method
+
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
