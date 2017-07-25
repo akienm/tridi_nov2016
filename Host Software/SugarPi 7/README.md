@@ -47,7 +47,8 @@ Server.py is a simple flask server. I really didn't put as much effort into unde
 Trigger.py is a commandline tester. It bypasses everything flask to send signals directly to master.py and uploader.py, with no safety checks. (bad signals will be ignored anyways). It's not meant for consumers in any way, and I look forward to the day I replace it. --Jack Xie
 
 Uploader.py handles uploading jobs to a remote directory. In order to do this, it creates 4 subprocesses using python's Multiprocessing module, and gives each of them a fourth of the files. Check out the scratchspace directory for some examples of ftp, multiprocessing with locks, and ftp with multiprocessing.
-We found that for whatever reason, it was faster to upload from several processes instead of just one. Don't know the details on that. 
+We found that for whatever reason, it was faster to upload from several processes instead of just one. Don't know the details on that.
+
 And an sftp sample. Also wondering if multiprocess is still faster, now that ftp->sftp. Stay tuned. -- Jack Xie
 
 *_utils files are all pretty self explanatory. They could probably be reorganized into a utils/ folder, or could be better grouped with the main processes they are used by (e.g. a master server folder, uploader server folder, etc). Check out the comments in them for details.
