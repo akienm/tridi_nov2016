@@ -1,0 +1,21 @@
+{diagnostics: {COMport: /dev/ttyAMC0, SugarCubeMessages: '', VideoProcAmp: {backLightComp: '',
+      brightness: '', colorEnable: '', contrast: '', gain: '', gamma: '', hue: '',
+      powerLineFrequency: '', saturation: '', sharpness: '', whiteBalance: ''}, cameraControl: {
+      aperture: '', exposure: '', focus: '', lowLightCompensation: '', pan: '', roll: '',
+      tilt: '', zoom: ''}, cameraID: IZONE UVC 5M CAMERA, forceCOMPort: 'False', imageResolution: 1024x768,
+    jpegQuality: '100', motionDetection: 'True', motionSensitivity: '1', shootingString: '][close
+      comments]  [51 images, 3 layer, 0, 30, and 60 degrees] [wink true]  [Reset]
+      S  [Verbose off] V0  [Illumination on] I1 [Set status LED] LO LG10  [Set Elevation
+      to mid level] R0 E0 R20 R0 {0,240,120  R* LB0 LG70 LR200 T LB0 LR0 LG10  } [Set
+      Elevation to mid level] R0 E0 E30 R20 R0 {0,351,15  R* LB0 LG70 LR200 T LB0
+      LR0 LG10  } [Set Elevation to lower level] R0 E0 E60 R20 R0 {0,351,15  R* LB0
+      LG70 LR200 T LB0 LR0 LG10  } [Reset arms, reset box, reset status LED] E0 R0  S
+      LO LB10 [done]', testerMessages: ''}, metadata: {clientVersion: SugarCube_v3.1,
+    scanID: '201707241419', scanStartTime: '201707241419', serverVersion: b3-8c, uploadStartTime: '201707241426'},
+  modellingOptions: {boundingBox: '-40,-40,-14,40,40,40', doImageCropping: 'False',
+    doModelCropping: 'True', doModelScaling: 'True', imageCroppingRectangle: '430,340,1310,1190',
+    meshlevel: '7', template3DP: ''}, order_details: {From: maxwell.gerber42@gmail.com,
+    attachments: '', body: '', filename: '', referenceID: '201707241419', subject: '',
+    to: mgerber@berkeley.edu}, zValues: {AL: 105.0, AOX: -2.0, AOY: 0.0, AOZ: 0.0,
+    CN: IZONE UVC 5M CAMERA, FL: 3.6, FX: 55, LE: 42, PH: 20.0, RX: 0.0, SC: U08,
+    SF: 1.0, SFX: 1.0, SFY: 1.0, SFZ: 1.0, SS: 0.25, TOX: 0.0, TOY: 0.0, TOZ: 0.0}}

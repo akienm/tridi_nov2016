@@ -1,0 +1,52 @@
+host: 'localhost'
+ports:
+  uploader: 12346
+  arduino: 12347
+  master: 12348
+path_to_logfile: './samplelog.log'
+log_level: 20
+#Default value for debug logging.DEBUG is 10
+#                        logging.INFO  is 20
+socket_buf_size: 1024
+num_uploader_processes: 4
+
+picture_directory: 'Scansets/slm-tri-di{}/'
+time_format: '%Y%m%d%H%M'
+
+# remote_directory: 'Scansets/ScannerID_{0}'
+# remote_ip: '159.203.67.4'
+# remote_user: 'ftptester'
+# remote_passwd: 'testtesttest'
+
+remote_directory: 'prod1.tri-di.com/Scans/b3/new/jack.xie@tri-di.com/slm-tri-di{}/'
+remote_ip: 'cloud1.tri-di.com'
+remote_user: 'scansteruser'
+remote_passwd: 'SugarCube4u!'
+remote_pem: 'privatekey.pem'
+
+parser_arguments:
+  - 'task'
+  - 'from_email'
+  - 'to_email'
+  - 'subject'
+  - 'details'
+# default_shootstring: '][close comments]  
+#                   [Reset] S  [Verbose off] V0  [Illumination on] I1  
+#                   [Set status LED] LO LG10  [Set Elevation to mid level] R0 E0 R20 R0  
+#                   {0,240,120  R* LB0 LG70 LR200 T LB0 LR0 LG10  }  
+#                   [Reset arms, reset box, reset status LED] E0 R0  S LO LB10 [done]'
+
+default_shootstring: '][close comments]  [51 images, 3 layer, 0, 30, and 60 degrees]  
+                  [wink true]  [Reset] S  [Verbose off] V0  [Illumination on] I1  
+                  [Set status LED] LO LG10  [Set Elevation to mid level] R0 E0 R20 R0  
+                  {0,240,120  R* LB0 LG70 LR200 T LB0 LR0 LG10  }  
+                  [Set Elevation to mid level] R0 E0 E30 R20 R0  
+                  {0,351,15  R* LB0 LG70 LR200 T LB0 LR0 LG10  }  
+                  [Set Elevation to lower level] R0 E0 E60 R20 R0  
+                  {0,351,15  R* LB0 LG70 LR200 T LB0 LR0 LG10  }  
+                  [Reset arms, reset box, reset status LED] E0 R0  S LO LB10 [done]'
+
+images:
+    height: 2592
+    width: 1944
+    median_stacking_count: 3

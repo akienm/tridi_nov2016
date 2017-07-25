@@ -1,0 +1,14 @@
+][close comments]
+[51 images, 3 layer, 0, 30, and 60 degrees] [wink true]
+[Reset] S
+[Verbose off] V0
+[Illumination on] I1
+[Set status LED] LO LG10
+[Set Elevation to mid level] R0 E0 R20 R0
+{0,240,120 R* LB0 LG70 LR200 T LB0 LR0 LG10 }
+[Set Elevation to mid level] R0 E0 E30 R20 R0
+{0,351,15  R* LB0 LG70 LR200 T LB0 LR0 LG10 }
+[Set Elevation to lower level] R0 E0 E60 R20 R0
+{0,351,15  R* LB0 LG70 LR200 T LB0 LR0 LG10 }
+[Reset arms, reset box, reset status LED] E0 R0 
+S LO LB10 [done]

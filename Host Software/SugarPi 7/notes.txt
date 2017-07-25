@@ -1,0 +1,52 @@
+Makefile to automatically run pep8 + mypy might be useful
+
+If you use FileHandler for writing logs, the size of log file will grow with time. Someday, it will occupy all of your disk. In order to avoid that situation, you should use RotatingFileHandler instead of FileHandler in production environment.
+
+http://victorlin.me/posts/2012/08/26/good-logging-practice-in-python
+
+Things to work on: 
+Making server available on more than just localhost
+Rewriting shootstring into buffer form
+[DONE] Split utils into utils and camera_utils
+
+If you try to take too many snapshots too quickly from the motion api, it fails
+EG- at .2s in between snaps I had a failure rate of 5%
+Weird 
+
+CANNOT FTP over iPhone tether (At least that's what I think was going on)
+Also when FTP fails, it fails silently- no error message recorder
+
+#########################
+#                       #
+#          TODO         #
+#                       #   
+##########################
+
+Master fails if no arduino detected
+Uploader fails if no network/ cannot connect to server
+Seperate log files for all processes please
+
+Refactor arduino control logic
+Implement Z string transfer between ard/etc.
+
+Merge server/master? Probably.
+
+Currently doing /here/is/my/folder_{} a lot
+Should probably change that to os.path.join 
+
+Figure out API endpoints- read from file?
+Move from config.yml to config.json and state.json - json all the way up!
+
+Verify XML format is correct
+
+DOCUMENT EVERYTHING BEFORE YOU LEAVE
+
+#########################
+#                       #
+#          DONE         #
+#                       #   
+##########################
+
+Refactor polling_server into base class w/logging
+Refactor master into class
+Refactor uploader into class

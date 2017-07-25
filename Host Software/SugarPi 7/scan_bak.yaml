@@ -1,0 +1,74 @@
+metadata:
+  clientVersion: "SugarCube_v3.1"
+  serverVersion: "b3-8c"
+  scanID: Null
+  scanStartTime: Null
+  uploadStartTime: Null
+order_details:
+  From: "maxwell.gerber42@gmail.com"
+  to: "mgerber@berkeley.edu"
+  subject: ""
+  referenceID: ""
+  body: ""
+  attachments: ""
+  filename: ""
+modellingOptions:
+  doImageCropping: "False"
+  imageCroppingRectangle: "430,340,1310,1190"
+  doModelScaling: "True"
+  doModelCropping: "True"
+  boundingBox: "-40,-40,-14,40,40,40"
+  meshlevel: "7"
+  template3DP: ""
+diagnostics:
+  shootingString: Null
+  cameraID: "IZONE UVC 5M CAMERA"
+  imageResolution: "1024x768"
+  jpegQuality: "100"
+  COMport: "/dev/ttyAMC0"
+  forceCOMPort: "False"
+  motionDetection: "True"
+  motionSensitivity: "1"
+  testerMessages: ""
+  SugarCubeMessages: ""
+  VideoProcAmp:
+    brightness: ""
+    contrast: ""
+    hue: ""
+    saturation: ""
+    sharpness: ""
+    gamma: ""
+    whiteBalance: ""
+    backLightComp: ""
+    gain: ""
+    colorEnable: ""
+    powerLineFrequency: ""
+  cameraControl:
+    zoom: ""
+    focus: ""
+    exposure: ""
+    aperture: ""
+    pan: ""
+    tilt: ""
+    roll: ""
+    lowLightCompensation: ""
+zValues:
+  LE: 42
+  SFX: 1.0
+  FL: 3.6
+  TOX: 0.0
+  SF: 1.0
+  SFZ: 1.0
+  FX: 55
+  SC: 'U08'
+  SS: 0.25
+  AL: 105.0
+  AOY: 0.0
+  CN: 'IZONE UVC 5M CAMERA'
+  PH: 20.0
+  RX: 0.0
+  AOX: -2.0
+  SFY: 1.0
+  TOZ: 0.0
+  AOZ: 0.0
+  TOY: 0.0

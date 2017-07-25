@@ -1,0 +1,428 @@
+2017-07-21 11:45:09,832 INFO init ./master.py
+2017-07-21 11:45:09,834 INFO Master program is starting subprograms
+2017-07-21 11:45:12,347 INFO Server program started
+2017-07-21 11:45:14,676 INFO Server program started
+2017-07-21 11:45:15,824 INFO init ./uploader.py
+2017-07-21 11:45:22,465 INFO init ./master.py
+2017-07-21 11:45:22,466 INFO Master program is starting subprograms
+2017-07-21 11:45:22,544 INFO Opening serial port Serial<id=0x7fbddd1d56d8, open=True>(port='/dev/ttyACM0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2, xonxoff=False, rtscts=False, dsrdtr=False)
+2017-07-21 11:45:24,903 INFO Server program started
+2017-07-21 11:45:27,208 INFO Server program started
+2017-07-21 11:45:28,313 INFO init ./uploader.py
+2017-07-21 11:45:36,813 INFO b'\n'
+2017-07-21 11:45:36,816 INFO b'\n'
+2017-07-21 11:45:36,818 INFO b'\n'
+2017-07-21 11:45:36,820 INFO b'SugarCube v2.05c.r748M, built Oct  6 2014 11:50:59 starting up.\r\n'
+2017-07-21 11:45:36,821 INFO b'0: Reset OK\n'
+2017-07-21 11:45:36,822 INFO b'free RAM = 866\r\n'
+2017-07-21 11:45:36,823 INFO b'0: Reset OK\n'
+2017-07-21 11:45:37,263 INFO init ./trigger.py
+2017-07-21 11:45:44,301 INFO init ./trigger.py
+2017-07-21 11:45:44,304 INFO Sending msg to master:
+{'task': 'start_scan'}
+2017-07-21 11:46:23,271 WARNING BAD STUFF HAPPENED
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 137, in _new_conn
+    (self.host, self.port), self.timeout, **extra_kw)
+  File "/usr/lib/python3/dist-packages/urllib3/util/connection.py", line 91, in create_connection
+    raise err
+  File "/usr/lib/python3/dist-packages/urllib3/util/connection.py", line 81, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 560, in urlopen
+    body=body, headers=headers)
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/usr/lib/python3.5/http/client.py", line 1106, in request
+    self._send_request(method, url, body, headers)
+  File "/usr/lib/python3.5/http/client.py", line 1151, in _send_request
+    self.endheaders(body)
+  File "/usr/lib/python3.5/http/client.py", line 1102, in endheaders
+    self._send_output(message_body)
+  File "/usr/lib/python3.5/http/client.py", line 934, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.5/http/client.py", line 877, in send
+    self.connect()
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 162, in connect
+    conn = self._new_conn()
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 146, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+requests.packages.urllib3.exceptions.NewConnectionError: <requests.packages.urllib3.connection.HTTPConnection object at 0x7fbddcf91cc0>: Failed to establish a new connection: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 376, in send
+    timeout=timeout
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 610, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/usr/lib/python3/dist-packages/urllib3/util/retry.py", line 273, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+requests.packages.urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /0/action/snapshot (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0x7fbddcf91cc0>: Failed to establish a new connection: [Errno 111] Connection refused',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jackjxie/Documents/SugarPi 6/motion_python_api/motion.py", line 36, in _make_motion_http_request
+    resp = requests.get(url, timeout=0.5, params=parameters)
+  File "/usr/lib/python3/dist-packages/requests/api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /0/action/snapshot (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0x7fbddcf91cc0>: Failed to establish a new connection: [Errno 111] Connection refused',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jackjxie/Documents/SugarPi 6/polling_server.py", line 87, in run
+    self.secondary_process()
+  File "./master.py", line 93, in secondary_process
+    take_picture(job = self.curr, num = i)
+  File "/home/jackjxie/Documents/SugarPi 6/camera_utils.py", line 18, in take_picture
+    take_snapshot()
+  File "/home/jackjxie/Documents/SugarPi 6/motion_python_api/motion.py", line 56, in take_snapshot
+    _make_motion_http_request(**kwargs)
+  File "/home/jackjxie/Documents/SugarPi 6/motion_python_api/motion.py", line 43, in _make_motion_http_request
+    raise ConnectionError()
+motion_python_api.motion.ConnectionError: There was an error connecting to the Motion server. 			Please check your configuration and try again
+2017-07-21 11:46:23,297 INFO Master program is killing subprograms
+2017-07-21 13:17:26,265 INFO init ./master.py
+2017-07-21 13:17:26,272 INFO Master program is starting subprograms
+2017-07-21 13:17:29,638 INFO Server program started
+2017-07-21 13:17:31,437 INFO Server program started
+2017-07-21 13:17:34,212 INFO init ./uploader.py
+2017-07-21 13:20:08,675 INFO init ./trigger.py
+2017-07-21 13:20:08,696 INFO Sending msg to uploader:
+{'command': 'upload', 'job': '-Jack-Xie-test-201707121430-RightEar'}
+2017-07-21 13:20:08,701 INFO Starting upload of -Jack-Xie-test-201707121430-RightEar
+2017-07-21 13:20:10,662 INFO Uploader starting
+2017-07-21 13:20:12,728 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 13:20:12,735 INFO Uploading: snapshot-2017071214323597.jpg
+2017-07-21 13:20:12,732 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 13:20:12,736 INFO Uploading: snapshot-2017071214304427.jpg
+2017-07-21 13:20:12,830 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 13:20:12,832 INFO Uploading: snapshot-2017071214304820.jpg
+2017-07-21 13:20:12,918 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 13:20:12,924 INFO Uploading: Manifest.xml
+2017-07-21 13:20:13,430 INFO Uploading: snapshot-2017071214302346.jpg
+2017-07-21 13:20:16,648 INFO Uploading: snapshot-2017071214315968.jpg
+2017-07-21 13:20:16,754 INFO Uploading: snapshot-2017071214305731.jpg
+2017-07-21 13:20:20,025 INFO Uploading: snapshot-2017071214305940.jpg
+2017-07-21 13:20:21,171 INFO Uploading: snapshot-2017071214311972.jpg
+2017-07-21 13:20:21,720 INFO Uploading: snapshot-2017071214304202.jpg
+2017-07-21 13:20:24,162 INFO Uploading: snapshot-2017071214323110.jpg
+2017-07-21 13:20:25,497 INFO Uploading: snapshot-2017071214322842.jpg
+2017-07-21 13:20:26,384 INFO Uploading: snapshot-2017071214302093.jpg
+2017-07-21 13:20:27,193 INFO Uploading: snapshot-2017071214310275.jpg
+2017-07-21 13:20:29,624 INFO Uploading: snapshot-2017071214311075.jpg
+2017-07-21 13:20:31,168 INFO Uploading: snapshot-2017071214310787.jpg
+2017-07-21 13:20:31,669 INFO Uploading: snapshot-2017071214320578.jpg
+2017-07-21 13:20:34,604 INFO Uploading: snapshot-2017071214312766.jpg
+2017-07-21 13:20:35,730 INFO Uploading: snapshot-2017071214321293.jpg
+2017-07-21 13:20:36,932 INFO Uploading: snapshot-2017071214323869.jpg
+2017-07-21 13:20:37,700 INFO Uploading: snapshot-2017071214312445.jpg
+2017-07-21 13:20:40,787 INFO Uploading: snapshot-2017071214312212.jpg
+2017-07-21 13:20:41,894 INFO Uploading: snapshot-2017071214320323.jpg
+2017-07-21 13:20:42,322 INFO Uploading: snapshot-2017071214323357.jpg
+2017-07-21 13:20:42,987 INFO Uploading: snapshot-2017071214321581.jpg
+2017-07-21 13:20:43,874 INFO Uploading: snapshot-2017071214315372.jpg
+2017-07-21 13:20:44,272 INFO Uploading: snapshot-2017071214315681.jpg
+2017-07-21 13:20:46,358 INFO Uploading: snapshot-2017071214301448.jpg
+2017-07-21 13:20:46,925 INFO Uploading: snapshot-2017071214321940.jpg
+2017-07-21 13:20:47,153 INFO Uploading: snapshot-2017071214310533.jpg
+2017-07-21 13:20:48,697 INFO Uploading: snapshot-2017071214311682.jpg
+2017-07-21 13:20:49,523 INFO Uploading: snapshot-2017071214320909.jpg
+2017-07-21 13:20:50,443 INFO Uploading: snapshot-2017071214313086.jpg
+2017-07-21 13:20:50,842 INFO Uploading: snapshot-2017071214305411.jpg
+2017-07-21 13:20:52,058 INFO Uploading: snapshot-2017071214302603.jpg
+2017-07-21 13:20:52,915 INFO Uploading: snapshot-2017071214311403.jpg
+2017-07-21 13:20:54,734 INFO Uploading: snapshot-2017071214322492.jpg
+2017-07-21 13:20:55,849 INFO Uploading: snapshot-2017071214322192.jpg
+2017-07-21 13:20:57,354 INFO Uploading: snapshot-2017071214305149.jpg
+2017-07-21 13:20:58,521 INFO Uploading: snapshot-2017071214314810.jpg
+2017-07-21 13:20:59,714 INFO Uploading: snapshot-2017071214315059.jpg
+2017-07-21 13:21:01,126 INFO Finished upload of -Jack-Xie-test-201707121430-RightEar
+2017-07-21 13:21:01,129 INFO ['Pool worker done', 'Pool worker done', 'Pool worker done', 'Pool worker done']
+2017-07-21 14:35:16,601 INFO init ./master.py
+2017-07-21 14:35:16,703 INFO Master program is starting subprograms
+2017-07-21 14:35:16,810 INFO Opening serial port Serial<id=0x7f95db5797f0, open=True>(port='/dev/ttyACM0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2, xonxoff=False, rtscts=False, dsrdtr=False)
+2017-07-21 14:35:20,805 INFO Server program started
+2017-07-21 14:35:22,582 INFO Server program started
+2017-07-21 14:35:24,440 INFO init ./uploader.py
+2017-07-21 14:35:28,826 INFO b'\n'
+2017-07-21 14:35:28,826 INFO b'\n'
+2017-07-21 14:35:28,827 INFO b'\n'
+2017-07-21 14:35:28,827 INFO b'SugarCube v2.05c.r748M, built Oct  6 2014 11:50:59 starting up.\r\n'
+2017-07-21 14:35:28,827 INFO b'0: Reset OK\n'
+2017-07-21 14:35:48,259 INFO init ./trigger.py
+2017-07-21 14:35:59,936 INFO init ./trigger.py
+2017-07-21 14:37:34,474 INFO init ./trigger.py
+2017-07-21 14:37:34,478 INFO Sending msg to master:
+{'task': 'scan_progress'}
+2017-07-21 14:38:00,323 INFO init ./trigger.py
+2017-07-21 14:38:00,326 INFO Sending msg to master:
+{'task': 'scan_progress'}
+2017-07-21 14:38:05,130 INFO init ./trigger.py
+2017-07-21 14:38:13,108 INFO init ./trigger.py
+2017-07-21 14:38:13,110 INFO Sending msg to master:
+{'task': 'stop_scan'}
+2017-07-21 14:38:18,484 INFO init ./trigger.py
+2017-07-21 14:38:18,486 INFO Sending msg to master:
+{'task': 'start_scan'}
+2017-07-21 14:38:31,117 WARNING BAD STUFF HAPPENED
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 137, in _new_conn
+    (self.host, self.port), self.timeout, **extra_kw)
+  File "/usr/lib/python3/dist-packages/urllib3/util/connection.py", line 91, in create_connection
+    raise err
+  File "/usr/lib/python3/dist-packages/urllib3/util/connection.py", line 81, in create_connection
+    sock.connect(sa)
+ConnectionRefusedError: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 560, in urlopen
+    body=body, headers=headers)
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 354, in _make_request
+    conn.request(method, url, **httplib_request_kw)
+  File "/usr/lib/python3.5/http/client.py", line 1106, in request
+    self._send_request(method, url, body, headers)
+  File "/usr/lib/python3.5/http/client.py", line 1151, in _send_request
+    self.endheaders(body)
+  File "/usr/lib/python3.5/http/client.py", line 1102, in endheaders
+    self._send_output(message_body)
+  File "/usr/lib/python3.5/http/client.py", line 934, in _send_output
+    self.send(msg)
+  File "/usr/lib/python3.5/http/client.py", line 877, in send
+    self.connect()
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 162, in connect
+    conn = self._new_conn()
+  File "/usr/lib/python3/dist-packages/urllib3/connection.py", line 146, in _new_conn
+    self, "Failed to establish a new connection: %s" % e)
+requests.packages.urllib3.exceptions.NewConnectionError: <requests.packages.urllib3.connection.HTTPConnection object at 0x7f95db335cf8>: Failed to establish a new connection: [Errno 111] Connection refused
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 376, in send
+    timeout=timeout
+  File "/usr/lib/python3/dist-packages/urllib3/connectionpool.py", line 610, in urlopen
+    _stacktrace=sys.exc_info()[2])
+  File "/usr/lib/python3/dist-packages/urllib3/util/retry.py", line 273, in increment
+    raise MaxRetryError(_pool, url, error or ResponseError(cause))
+requests.packages.urllib3.exceptions.MaxRetryError: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /0/action/snapshot (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0x7f95db335cf8>: Failed to establish a new connection: [Errno 111] Connection refused',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jackjxie/Documents/SugarPi 6/motion_python_api/motion.py", line 36, in _make_motion_http_request
+    resp = requests.get(url, timeout=0.5, params=parameters)
+  File "/usr/lib/python3/dist-packages/requests/api.py", line 67, in get
+    return request('get', url, params=params, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/api.py", line 53, in request
+    return session.request(method=method, url=url, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 468, in request
+    resp = self.send(prep, **send_kwargs)
+  File "/usr/lib/python3/dist-packages/requests/sessions.py", line 576, in send
+    r = adapter.send(request, **kwargs)
+  File "/usr/lib/python3/dist-packages/requests/adapters.py", line 437, in send
+    raise ConnectionError(e, request=request)
+requests.exceptions.ConnectionError: HTTPConnectionPool(host='localhost', port=8080): Max retries exceeded with url: /0/action/snapshot (Caused by NewConnectionError('<requests.packages.urllib3.connection.HTTPConnection object at 0x7f95db335cf8>: Failed to establish a new connection: [Errno 111] Connection refused',))
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jackjxie/Documents/SugarPi 6/polling_server.py", line 87, in run
+    self.secondary_process()
+  File "./master.py", line 93, in secondary_process
+    take_picture(job = self.curr, num = i)
+  File "/home/jackjxie/Documents/SugarPi 6/camera_utils.py", line 18, in take_picture
+    take_snapshot()
+  File "/home/jackjxie/Documents/SugarPi 6/motion_python_api/motion.py", line 56, in take_snapshot
+    _make_motion_http_request(**kwargs)
+  File "/home/jackjxie/Documents/SugarPi 6/motion_python_api/motion.py", line 43, in _make_motion_http_request
+    raise ConnectionError()
+motion_python_api.motion.ConnectionError: There was an error connecting to the Motion server. 			Please check your configuration and try again
+2017-07-21 14:38:31,211 INFO Master program is killing subprograms
+2017-07-21 14:38:55,073 INFO init ./master.py
+2017-07-21 14:38:55,074 INFO Master program is starting subprograms
+2017-07-21 14:38:55,121 INFO Opening serial port Serial<id=0x7fd4f3c946a0, open=True>(port='/dev/ttyACM0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2, xonxoff=False, rtscts=False, dsrdtr=False)
+2017-07-21 14:38:57,880 INFO Server program started
+2017-07-21 14:39:00,621 INFO Server program started
+2017-07-21 14:39:02,421 INFO init ./uploader.py
+2017-07-21 14:39:09,294 INFO b'\n'
+2017-07-21 14:39:09,295 INFO b'\n'
+2017-07-21 14:39:09,295 INFO b'\n'
+2017-07-21 14:39:09,295 INFO b'SugarCube v2.05c.r748M, built Oct  6 2014 11:50:59 starting up.\r\n'
+2017-07-21 14:39:09,295 INFO b'0: Reset OK\n'
+2017-07-21 14:39:09,295 INFO b'free RAM = 866\r\n'
+2017-07-21 14:39:09,295 INFO b'0: Reset OK\n'
+2017-07-21 14:39:28,676 INFO init ./trigger.py
+2017-07-21 14:39:28,679 INFO Sending msg to uploader:
+{'command': 'upload_status'}
+2017-07-21 14:39:35,704 INFO init ./trigger.py
+2017-07-21 14:39:35,706 INFO Sending msg to master:
+{'task': 'scan_progress'}
+2017-07-21 14:39:39,233 INFO init ./trigger.py
+2017-07-21 14:39:39,236 INFO Sending msg to uploader:
+{'command': 'upload_status'}
+2017-07-21 14:39:41,345 INFO init ./trigger.py
+2017-07-21 14:39:41,348 INFO Sending msg to master:
+{'task': 'scan_progress'}
+2017-07-21 15:59:00,824 INFO init ./uploader.py
+2017-07-21 15:59:09,082 INFO init ./trigger.py
+2017-07-21 15:59:09,107 INFO Sending msg to uploader:
+{'job': '-Jack-Xie-test-201707121430-RightEar', 'command': 'upload'}
+2017-07-21 15:59:09,108 INFO Starting upload of -Jack-Xie-test-201707121430-RightEar
+2017-07-21 15:59:11,505 INFO Created directory: prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 15:59:11,641 INFO Uploader starting
+2017-07-21 15:59:13,663 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 15:59:13,664 INFO Uploading: snapshot-2017071214304820.jpg
+2017-07-21 15:59:13,676 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 15:59:13,677 INFO Uploading: Manifest.xml
+2017-07-21 15:59:13,691 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 15:59:13,691 INFO Uploading: snapshot-2017071214323597.jpg
+2017-07-21 15:59:13,708 INFO In prod1.tri-di.com/Scans/b3/new/sugarcubetests@soundfit.me/slm-tri-di-Jack-Xie-test-201707121430-RightEar/
+2017-07-21 15:59:13,709 INFO Uploading: snapshot-2017071214304427.jpg
+2017-07-21 15:59:14,133 INFO Uploading: snapshot-2017071214302346.jpg
+2017-07-21 15:59:17,341 INFO Uploading: snapshot-2017071214305731.jpg
+2017-07-21 15:59:17,560 INFO Uploading: snapshot-2017071214315968.jpg
+2017-07-21 15:59:20,060 INFO Uploading: snapshot-2017071214305940.jpg
+2017-07-21 15:59:20,181 INFO Uploading: snapshot-2017071214322842.jpg
+2017-07-21 15:59:21,131 INFO Uploading: snapshot-2017071214304202.jpg
+2017-07-21 15:59:23,634 INFO Uploading: snapshot-2017071214323110.jpg
+2017-07-21 15:59:26,464 INFO Uploading: snapshot-2017071214311972.jpg
+2017-07-21 15:59:27,137 INFO Uploading: snapshot-2017071214310275.jpg
+2017-07-21 15:59:27,270 INFO Uploading: snapshot-2017071214312766.jpg
+2017-07-21 15:59:27,405 INFO Uploading: snapshot-2017071214311075.jpg
+2017-07-21 15:59:30,891 INFO Uploading: snapshot-2017071214320578.jpg
+2017-07-21 15:59:31,633 INFO Uploading: snapshot-2017071214321293.jpg
+2017-07-21 15:59:32,727 INFO Uploading: snapshot-2017071214321581.jpg
+2017-07-21 15:59:33,529 INFO Uploading: snapshot-2017071214302093.jpg
+2017-07-21 15:59:34,678 INFO Uploading: snapshot-2017071214312445.jpg
+2017-07-21 15:59:37,493 INFO Uploading: snapshot-2017071214320323.jpg
+2017-07-21 15:59:39,220 INFO Uploading: snapshot-2017071214310787.jpg
+2017-07-21 15:59:40,151 INFO Uploading: snapshot-2017071214312212.jpg
+2017-07-21 15:59:40,658 INFO Uploading: snapshot-2017071214315681.jpg
+2017-07-21 15:59:41,008 INFO Uploading: snapshot-2017071214311682.jpg
+2017-07-21 15:59:44,345 INFO Uploading: snapshot-2017071214321940.jpg
+2017-07-21 15:59:44,933 INFO Uploading: snapshot-2017071214323869.jpg
+2017-07-21 15:59:47,474 INFO Uploading: snapshot-2017071214315372.jpg
+2017-07-21 15:59:47,927 INFO Uploading: snapshot-2017071214311403.jpg
+2017-07-21 15:59:48,061 INFO Uploading: snapshot-2017071214320909.jpg
+2017-07-21 15:59:49,389 INFO Uploading: snapshot-2017071214323357.jpg
+2017-07-21 15:59:53,211 INFO Uploading: snapshot-2017071214302603.jpg
+2017-07-21 15:59:53,672 INFO Uploading: snapshot-2017071214322192.jpg
+2017-07-21 15:59:55,106 INFO Uploading: snapshot-2017071214310533.jpg
+2017-07-21 15:59:56,408 INFO Uploading: snapshot-2017071214301448.jpg
+2017-07-21 15:59:59,627 INFO Uploading: snapshot-2017071214305149.jpg
+2017-07-21 16:00:00,423 INFO Uploading: snapshot-2017071214313086.jpg
+2017-07-21 16:00:01,533 INFO Uploading: snapshot-2017071214305411.jpg
+2017-07-21 16:00:02,595 INFO Uploading: snapshot-2017071214314810.jpg
+2017-07-21 16:00:05,776 INFO Uploading: snapshot-2017071214315059.jpg
+2017-07-21 16:00:07,490 INFO Uploading: snapshot-2017071214322492.jpg
+2017-07-21 16:00:11,860 INFO Finished upload of -Jack-Xie-test-201707121430-RightEar
+2017-07-21 16:00:11,860 INFO ['Pool worker done', 'Pool worker done', 'Pool worker done', 'Pool worker done']
+2017-07-21 16:10:49,340 INFO init ./uploader.py
+2017-07-21 16:10:57,516 INFO init ./trigger.py
+2017-07-21 16:10:57,519 INFO Sending msg to uploader:
+{'job': '-Jack-Xie-TEST-201707121430-RightEar', 'command': 'upload'}
+2017-07-21 16:10:57,520 INFO Starting upload of -Jack-Xie-TEST-201707121430-RightEar
+2017-07-21 16:11:00,033 INFO Created directory: prod1.tri-di.com/Scans/b3/new/jack.xie@tri-di.com/slm-tri-di-Jack-Xie-TEST-201707121430-RightEar/
+2017-07-21 16:11:00,096 INFO Uploader starting
+2017-07-21 16:11:02,286 INFO In prod1.tri-di.com/Scans/b3/new/jack.xie@tri-di.com/slm-tri-di-Jack-Xie-TEST-201707121430-RightEar/
+2017-07-21 16:11:02,288 INFO Uploading: snapshot-2017071214304427.jpg
+2017-07-21 16:11:02,319 INFO In prod1.tri-di.com/Scans/b3/new/jack.xie@tri-di.com/slm-tri-di-Jack-Xie-TEST-201707121430-RightEar/
+2017-07-21 16:11:02,320 INFO Uploading: snapshot-2017071214323597.jpg
+2017-07-21 16:11:02,342 INFO In prod1.tri-di.com/Scans/b3/new/jack.xie@tri-di.com/slm-tri-di-Jack-Xie-TEST-201707121430-RightEar/
+2017-07-21 16:11:02,343 INFO Uploading: snapshot-2017071214304820.jpg
+2017-07-21 16:11:02,370 INFO In prod1.tri-di.com/Scans/b3/new/jack.xie@tri-di.com/slm-tri-di-Jack-Xie-TEST-201707121430-RightEar/
+2017-07-21 16:11:02,371 INFO Uploading: Manifest.xml
+2017-07-21 16:11:02,773 INFO Uploading: snapshot-2017071214302346.jpg
+2017-07-21 16:11:07,031 INFO Uploading: snapshot-2017071214322842.jpg
+2017-07-21 16:11:07,482 INFO Uploading: snapshot-2017071214304202.jpg
+2017-07-21 16:11:11,043 INFO Uploading: snapshot-2017071214312766.jpg
+2017-07-21 16:11:13,694 INFO Uploading: snapshot-2017071214310275.jpg
+2017-07-21 16:11:15,700 INFO Uploading: snapshot-2017071214321581.jpg
+2017-07-21 16:11:18,546 INFO Uploading: snapshot-2017071214320578.jpg
+2017-07-21 16:11:19,110 INFO Uploading: snapshot-2017071214315968.jpg
+2017-07-21 16:11:20,036 INFO Uploading: snapshot-2017071214311682.jpg
+2017-07-21 16:11:20,373 INFO Uploading: snapshot-2017071214305731.jpg
+2017-07-21 16:11:23,747 INFO Uploading: snapshot-2017071214311403.jpg
+2017-07-21 16:11:24,293 INFO Uploading: snapshot-2017071214312445.jpg
+2017-07-21 16:11:27,146 INFO Uploading: snapshot-2017071214322192.jpg
+2017-07-21 16:11:29,154 INFO Uploading: snapshot-2017071214305940.jpg
+2017-07-21 16:11:30,088 INFO Uploading: snapshot-2017071214305149.jpg
+2017-07-21 16:11:31,467 INFO Uploading: snapshot-2017071214311972.jpg
+2017-07-21 16:11:32,982 INFO Uploading: snapshot-2017071214314810.jpg
+2017-07-21 16:11:34,921 INFO Uploading: snapshot-2017071214323110.jpg
+2017-07-21 16:11:36,234 INFO Uploading: snapshot-2017071214315059.jpg
+2017-07-21 16:11:37,811 INFO Uploading: snapshot-2017071214320323.jpg
+2017-07-21 16:11:40,678 INFO Uploading: snapshot-2017071214302093.jpg
+2017-07-21 16:11:42,400 INFO Uploading: snapshot-2017071214311075.jpg
+2017-07-21 16:11:46,526 INFO Uploading: snapshot-2017071214315681.jpg
+2017-07-21 16:11:46,575 INFO Uploading: snapshot-2017071214310787.jpg
+2017-07-21 16:11:49,450 INFO Uploading: snapshot-2017071214321293.jpg
+2017-07-21 16:11:50,858 INFO Uploading: snapshot-2017071214323869.jpg
+2017-07-21 16:11:53,461 INFO Uploading: snapshot-2017071214321940.jpg
+2017-07-21 16:11:53,463 INFO Uploading: snapshot-2017071214312212.jpg
+2017-07-21 16:11:55,072 INFO Uploading: snapshot-2017071214323357.jpg
+2017-07-21 16:11:55,705 INFO Uploading: snapshot-2017071214315372.jpg
+2017-07-21 16:11:57,905 INFO Uploading: snapshot-2017071214320909.jpg
+2017-07-21 16:11:58,118 INFO Uploading: snapshot-2017071214301448.jpg
+2017-07-21 16:11:58,222 INFO Uploading: snapshot-2017071214310533.jpg
+2017-07-21 16:12:01,158 INFO Uploading: snapshot-2017071214313086.jpg
+2017-07-21 16:12:01,301 INFO Uploading: snapshot-2017071214305411.jpg
+2017-07-21 16:12:02,689 INFO Uploading: snapshot-2017071214302603.jpg
+2017-07-21 16:12:04,211 INFO Uploading: snapshot-2017071214322492.jpg
+2017-07-21 16:12:06,736 INFO Finished upload of -Jack-Xie-TEST-201707121430-RightEar
+2017-07-21 16:12:06,737 INFO ['Pool worker done', 'Pool worker done', 'Pool worker done', 'Pool worker done']
+2017-07-21 16:17:25,722 INFO init ./trigger.py
+2017-07-24 14:18:41,989 INFO init ./master.py
+2017-07-24 14:18:42,010 INFO Master program is starting subprograms
+2017-07-24 14:18:42,059 INFO Opening serial port Serial<id=0x7fb6b0537a58, open=True>(port='/dev/ttyACM0', baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2, xonxoff=False, rtscts=False, dsrdtr=False)
+2017-07-24 14:18:45,357 INFO Server program started
+2017-07-24 14:18:47,601 INFO Server program started
+2017-07-24 14:18:50,394 INFO init ./uploader.py
+2017-07-24 14:18:54,072 INFO b'\n'
+2017-07-24 14:18:54,072 INFO b'\n'
+2017-07-24 14:18:54,073 INFO b'\n'
+2017-07-24 14:18:54,073 INFO b'SugarCube v2.05c.r748M, built Oct  6 2014 11:50:59 starting up.\r\n'
+2017-07-24 14:18:54,074 INFO b'0: Reset OK\n'
+2017-07-24 14:19:08,016 INFO init ./trigger.py
+2017-07-24 14:19:08,019 INFO Sending msg to master:
+{'task': 'start_scan'}
+2017-07-24 14:26:01,813 WARNING BAD STUFF HAPPENED
+Traceback (most recent call last):
+  File "/usr/lib/python3.5/xml/etree/ElementTree.py", line 788, in _get_writer
+    write = file_or_filename.write
+AttributeError: 'str' object has no attribute 'write'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jackjxie/Documents/SugarPi 6/polling_server.py", line 87, in run
+    self.secondary_process()
+  File "./master.py", line 119, in secondary_process
+    xml_from_config(scan_info, xml_file_loc, self.imageList)
+  File "/home/jackjxie/Documents/SugarPi 6/XML_utils.py", line 51, in xml_from_config
+    ET.ElementTree(sugarCubeScan).write(dataFile)
+  File "/usr/lib/python3.5/xml/etree/ElementTree.py", line 758, in write
+    with _get_writer(file_or_filename, enc_lower) as write:
+  File "/usr/lib/python3.5/contextlib.py", line 59, in __enter__
+    return next(self.gen)
+  File "/usr/lib/python3.5/xml/etree/ElementTree.py", line 795, in _get_writer
+    errors="xmlcharrefreplace")
+FileNotFoundError: [Errno 2] No such file or directory: 'Scansets/slm-tri-di201707241419/Manifest.xml'
+2017-07-24 14:26:01,893 INFO Master program is killing subprograms
