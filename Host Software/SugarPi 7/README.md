@@ -40,12 +40,15 @@ The brain of the project is master.py. Master.py spawns child processes (server.
 
 I decided to use a buffer and pop off commands from the front for a couple reasons:
  - It makes it easier to pause a scan, insert new commands from developer mode, etc.
- - It provides for a logical way to seperate master's server duties (reading and responding to messages) and its buisness duties. Send a command, then check your messages.  
+ - It provides for a logical way to seperate master's server duties (reading and responding to messages) and its buisness duties. Send a command, then check your messages.
 
 Server.py is a simple flask server. I really didn't put as much effort into understanding how to create a RESTful API with a messaging standard and accurately named endpoints and kinda just went with whatever was easiest. Personally I think server.py can be merged with master.py and the arduino logic can be moved to a new server. All server.py currently does is pass messages to master and uploader and return the responses. Expect this to change if I have the time.
 
-Uploader.py handles uploading jobs to a remote directory. In order to do this, it creates 4 subprocesses using python's Multiprocessing module, and gives each of them a fourth of the folders. Check out the scratchspace directory for some examples of ftp, multiprocessing with locks, and ftp with multiprocessing.
+Trigger.py is a commandline tester. It bypasses everything flask to send signals directly to master.py and uploader.py, with no safety checks. (bad signals will be ignored anyways). It's not meant for consumers in any way, and I look forward to the day I replace it. --Jack Xie
+
+Uploader.py handles uploading jobs to a remote directory. In order to do this, it creates 4 subprocesses using python's Multiprocessing module, and gives each of them a fourth of the files. Check out the scratchspace directory for some examples of ftp, multiprocessing with locks, and ftp with multiprocessing.
 We found that for whatever reason, it was faster to upload from several processes instead of just one. Don't know the details on that. 
+And an sftp sample. Also wondering if multiprocess is still faster, now that ftp->sftp. Stay tuned. -- Jack Xie
 
 *_utils files are all pretty self explanatory. They could probably be reorganized into a utils/ folder, or could be better grouped with the main processes they are used by (e.g. a master server folder, uploader server folder, etc). Check out the comments in them for details.
 
@@ -53,7 +56,7 @@ motion_python_api is an open-source project that I maintain (maintain is a loose
 
 Scratchspace is a folder where I'll put snippets of test code that I found useful. If I mock up an idea before adding it to the project, it will go in there.
 
-Tests contains testing utils (upload_trigger.py) and unit tests for parts of the project. Most of our project is over the web (REST API, sockets between processes, FTP) which makes it pretty hard to test. If you know of a framework to test parts of the project, PLEASE make use of it. To run the existing tests, use the command nosetests from the root directory.
+Tests contains old testing utils (upload_trigger.py) and unit tests for parts of the project. Most of our project is over the web (REST API, sockets between processes, FTP) which makes it pretty hard to test. If you know of a framework to test parts of the project, PLEASE make use of it. To run the old tests, use the command nosetests from the root directory.
 
 # Dependencies
 
